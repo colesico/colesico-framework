@@ -20,6 +20,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vladlen Larionov
@@ -28,9 +30,17 @@ public interface HttpResponse {
 
     HttpResponse setStatus(Integer code);
 
+    Integer getStatus();
+
+    HttpResponse setHeader(String name, String vale);
+
     HttpResponse addHeader(String name, String vale);
 
+    Map<String, List<String>> getHeaders();
+
     HttpResponse addCookie(HttpCookie cookie);
+
+    List<HttpCookie> getCookies();
 
     OutputStream outputStream();
 

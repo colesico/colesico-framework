@@ -2,14 +2,13 @@ package colesico.framework.jjwt.internal;
 
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.jjwt.HttpJwtClient;
-import colesico.framework.jjwt.Jwt;
-import colesico.framework.jjwt.JwtClient;
-import colesico.framework.jjwt.JwtTokenUtils;
+import colesico.framework.jjwt.*;
 
 @Producer
-@Produce(Jwt.class)
-@Produce(value = HttpJwtClient.class, keyType = JwtClient.class)
+@Produce(ApiJwt.class)
+@Produce(ApiJwtClient.class)
+@Produce(WebJwt.class)
+@Produce(WebJwtClient.class)
 @Produce(JwtTokenUtils.class)
 public class JjwtProducer {
 }

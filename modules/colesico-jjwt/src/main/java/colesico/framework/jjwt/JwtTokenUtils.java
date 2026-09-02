@@ -1,7 +1,6 @@
 package colesico.framework.jjwt;
 
 import colesico.framework.security.SecurityException;
-import colesico.framework.security.authentication.AuthenticationOutcome;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -11,6 +10,7 @@ import jakarta.inject.Singleton;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -25,24 +25,24 @@ public class JwtTokenUtils {
     private final SecretKey accessKey;
     private final SecretKey refreshKey;
 
-    private final long accessTtl;
-    private final long refreshTtl;
+    private final long accessTtlMs;
+    private final long refreshTtlMs;
 
 
     public JwtTokenUtils(JwtConfigPrototype config) {
         this.accessKey = Keys.hmacShaKeyFor(config.accessSecret().getBytes(StandardCharsets.UTF_8));
         this.refreshKey = Keys.hmacShaKeyFor(config.refreshSecret().getBytes(StandardCharsets.UTF_8));
-        this.accessTtl = config.accessTtl();
-        this.refreshTtl = config.refreshTtl();
+        this.accessTtlMs = config.accessTtl() * 1000;
+        this.refreshTtlMs = config.refreshTtl() * 1000;
     }
 
     public String createAccessToken(String subject, Map<String, Object> claims) {
         return Jwts.builder()
                 .subject(subject)
-                .claims(claims)
+                .claims(new HashMap<>(claims))
                 .claim(TOKEN_TYPE_CLAIM, ACCESS_TOKEN_TYPE)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + accessTtl))
+                .expiration(new Date(System.currentTimeMillis() + accessTtlMs))
                 .signWith(accessKey)
                 .compact();
     }
@@ -53,7 +53,7 @@ public class JwtTokenUtils {
                 .claim(TOKEN_TYPE_CLAIM, REFRESH_TOKEN_TYPE)
                 .issuedAt(new Date())
                 .id(UUID.randomUUID().toString())
-                .expiration(new Date(System.currentTimeMillis() + refreshTtl))
+                .expiration(new Date(System.currentTimeMillis() + refreshTtlMs))
                 .signWith(refreshKey)
                 .compact();
     }

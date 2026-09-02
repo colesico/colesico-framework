@@ -8,7 +8,7 @@ public interface JwtClient {
 
     String readRefreshToken();
 
-    void clearTokens();
-
     void askRefreshToken();
+
+    void clearTokens();
 }

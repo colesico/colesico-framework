@@ -1,5 +1,7 @@
 package colesico.framework.jjwt;
 
+import colesico.framework.ioc.message.IocMessage;
+import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.security.Identity;
 import colesico.framework.security.authentication.IssuedIdentity;
 import colesico.framework.security.authentication.AuthenticationOutcome;
@@ -8,13 +10,11 @@ import colesico.framework.security.authentication.LogoutMessage;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.inject.Inject;
-import jakarta.inject.Singleton;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
-public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
+abstract public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
 
     protected final JwtTokenUtils tokenUtils;
     protected final JwtClient client;
@@ -43,7 +43,7 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
         }
 
         // Neither Access nor Refresh tokens are available.
-        return AuthenticationOutcome.bypass("NO_JWT_TOKEN");
+        return AuthenticationOutcome.bypass("NoJwtTokens");
     }
 
     protected AuthenticationOutcome checkAccessToken(String accessToken) {
@@ -59,10 +59,10 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
             }
             // No refresh token available to rescue the expired access token
             client.askRefreshToken();
-            return AuthenticationOutcome.stage();
+            return AuthenticationOutcome.stage("RefreshTokenRequested");
         } catch (Exception e) {
             client.clearTokens();
-            return AuthenticationOutcome.failure("INVALID_ACCESS_TOKEN");
+            return AuthenticationOutcome.failure("InvalidAccessToken");
         }
     }
 
@@ -82,7 +82,7 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
             Map<String, Object> claims = provideClaims(subject);
             if (claims == null) {
                 client.clearTokens();
-                return AuthenticationOutcome.failure("REFRESH_ACCESS_TOKEN_FAILURE");
+                return AuthenticationOutcome.failure("RefreshAccessTokenFailure");
             }
 
             var accessToken = tokenUtils.createAccessToken(subject, claims);
@@ -95,11 +95,11 @@ public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
         } catch (ExpiredJwtException ex) {
             // Refresh token has also expired
             client.clearTokens();
-            return AuthenticationOutcome.failure("REFRESH_TOKEN_EXPIRED");
+            return AuthenticationOutcome.failure("RefreshTokenExpired");
         } catch (Exception ex) {
             // Token is modified, forged, or otherwise invalid
             client.clearTokens();
-            return AuthenticationOutcome.failure("INVALID_REFRESH_TOKEN");
+            return AuthenticationOutcome.failure("InvalidRefreshToken");
         }
     }
 

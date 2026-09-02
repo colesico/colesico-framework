@@ -8,6 +8,8 @@ import io.fusionauth.http.server.HTTPResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
+import java.util.List;
+import java.util.Map;
 
 public class FusionHttpResponse implements HttpResponse {
 
@@ -24,15 +26,36 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
+    public Integer getStatus() {
+        return response.getStatus();
+    }
+
+    @Override
+    public HttpResponse setHeader(String name, String vale) {
+        response.setHeader(name, vale);
+        return this;
+    }
+
+    @Override
     public HttpResponse addHeader(String name, String vale) {
         response.addHeader(name, vale);
         return this;
     }
 
     @Override
+    public Map<String, List<String>> getHeaders() {
+        return response.getHeadersMap();
+    }
+
+    @Override
     public HttpResponse addCookie(HttpCookie cookie) {
         response.addCookie(((FusionHttpCookie) cookie).unwrap());
         return this;
+    }
+
+    @Override
+    public List<HttpCookie> getCookies() {
+        throw new UnsupportedOperationException("Not implemented yet");
     }
 
     @Override
