@@ -196,7 +196,7 @@ public class SecurityModulator extends Modulator {
             }
             String[] propertiesArray = authentication.unwrap().properties();
 
-            paramsCodegen.add("$T.$N($T.class, $L, $L)",
+            paramsCodegen.add("\n $T.$N($T.class, $L, $L)",
                     ClassName.get(AuthenticationInterceptor.AuthenticatorSpec.class),
                     AuthenticationInterceptor.AuthenticatorSpec.OF_METHOD,
                     TypeName.get(authenticatorClass),
@@ -206,7 +206,7 @@ public class SecurityModulator extends Modulator {
         paramsCode.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
 
 
-        paramsCode.add(",$T.$L)", ClassName.get(AuthenticationPolicy.Strategy.class), strategy);
+        paramsCode.add(",\n $T.$L)", ClassName.get(AuthenticationPolicy.Strategy.class), strategy);
 
         // Add interceptor invocation code
         CodeBlock.Builder interceptorCode = CodeBlock.builder();
