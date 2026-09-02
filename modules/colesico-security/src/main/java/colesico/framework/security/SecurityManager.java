@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 public interface SecurityManager {
 
     /**
-     * Attempts to authenticate a subject with given auth using the provided message
+     * Attempts to authenticate a subject with given rawAuthenticator using the provided message
      */
     <A extends AuthenticationMessage> AuthenticationResult authenticate(Authenticator<A, ?> auth, A message);
 

@@ -1,6 +1,7 @@
 package colesico.framework.security.assist.authentication.basic;
 
 import colesico.framework.security.Identity;
+import colesico.framework.security.authentication.AuthenticatedIdentity;
 import colesico.framework.security.authentication.Authenticator;
 import colesico.framework.security.authentication.AuthenticationOutcome;
 import colesico.framework.security.authentication.LogoutMessage;
@@ -80,9 +81,8 @@ public class SimpleBasic implements Authenticator<BasicMessage, LogoutMessage> {
         }
 
         Map<String, Object> claims = new HashMap<>();
-        claims.put(Identity.AUTHENTICATOR_CLAIM, SimpleBasic.class);
         claims.put(Identity.ROLES_CLAIM, account.roles());
-        return Identity.Default.of(request.login(), claims);
+        return AuthenticatedIdentity.of(this, request.login(), claims);
     }
 
     @Override

@@ -19,9 +19,10 @@ package colesico.framework.security.codegen;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.assist.codegen.ArrayCodegen;
+import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.assist.codegen.model.FieldElement;
+import colesico.framework.ioc.codegen.model.ClassifierType;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
 import colesico.framework.security.authentication.AuthenticationPolicy;
@@ -185,8 +186,22 @@ public class SecurityModulator extends Modulator {
         paramsCode.add("new $T(", ClassName.get(AuthenticationInterceptor.Options.class));
         ArrayCodegen paramsCodegen = new ArrayCodegen(ClassName.get(Class.class));
         for (var authentication : authentications) {
-            TypeMirror authenticatorClass = authentication.valueTypeMirror(a -> a.value());
-            paramsCodegen.add("$T.class", TypeName.get(authenticatorClass));
+            TypeMirror authenticatorClass = authentication.valueTypeMirror(Authentication::value);
+            TypeMirror classifier = authentication.valueTypeMirror(Authentication::classed);
+            CodeBlock.Builder classedCb = CodeBlock.builder();
+            if (CodegenUtils.isAssignable(Class.class, classifier, processorContext.processingEnv())) {
+                classedCb.add("$T.class", TypeName.get(classifier));
+            } else {
+                classedCb.add("null");
+            }
+            String[] propertiesArray = authentication.unwrap().properties();
+
+            paramsCodegen.add("$T.$N($T.class, $L, $L)",
+                    ClassName.get(AuthenticationInterceptor.AuthenticatorSpec.class),
+                    AuthenticationInterceptor.AuthenticatorSpec.OF_METHOD,
+                    TypeName.get(authenticatorClass),
+                    classedCb.build(),
+                    parseAuthenticationProps(propertiesArray));
         }
         paramsCode.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
 
@@ -198,5 +213,25 @@ public class SecurityModulator extends Modulator {
         interceptorCode.add("$N::$N", fieldName, Interceptor.INTERCEPT_METHOD);
         serviceMethod.addInterception(InterceptionPhases.AUTHENTICATION,
                 new InterceptionElement(interceptorCode.build(), paramsCode.build()));
+    }
+
+    protected CodeBlock parseAuthenticationProps(String[] properties) {
+        CodeBlock.Builder cb = CodeBlock.builder();
+        if (properties.length == 0) {
+            cb.add("null");
+        } else {
+            ArrayCodegen paramsCodegen = new ArrayCodegen();
+            for (var prop : properties) {
+                String[] kv = prop.split("=", 1);
+                if (kv.length < 2) {
+                    kv = new String[]{"value", kv[0]};
+                }
+                paramsCodegen.add("$S, $S", kv[0], kv[1]);
+            }
+            cb.add("$T.of(");
+            cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
+            cb.add(")");
+        }
+        return cb.build();
     }
 }

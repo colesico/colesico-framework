@@ -12,14 +12,14 @@ import java.util.Collection;
 @Singleton
 public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
-    private final Supplier<Authenticator<?,?>> authenticatorFactory;
+    private final AuthenticatorFactory authenticatorFactory;
     private final SecurityManager securityManager;
     private final AuthenticationContext authContext;
 
-    public AuthenticationInterceptorImpl(Supplier<Authenticator> authenticatorFactory,
+    public AuthenticationInterceptorImpl(AuthenticatorFactory authenticatorFactory,
                                          SecurityManager securityManager,
                                          AuthenticationContext authContext) {
-        this.authenticatorFactory = (Supplier) authenticatorFactory;
+        this.authenticatorFactory = authenticatorFactory;
         this.securityManager = securityManager;
         this.authContext = authContext;
     }
@@ -27,10 +27,10 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
     @Override
     public Object intercept(InvocationContext context, Options options) {
 
-        Collection<Authenticator<?,?>> authenticators = new ArrayList<>();
+        Collection<Authenticator<?, ?>> authenticators = new ArrayList<>();
 
-        for (var authClass : options.authenticators()) {
-            authenticators.add(authenticatorFactory.get(authClass));
+        for (var authSpec : options.authenticators()) {
+            authenticators.add(authenticatorFactory.get(authSpec.authenticatorClass(), authSpec.classed()));
         }
 
         switch (options.strategy()) {

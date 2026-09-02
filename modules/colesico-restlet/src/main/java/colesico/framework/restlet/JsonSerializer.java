@@ -26,14 +26,14 @@ public interface JsonSerializer {
      * @param value        The object to serialize (can be null)
      * @param baseType     The explicit type of the object, supporting generics
      * @param charset      The character encoding for the stream; if null, {@link #JSON_CHARSET} is used
-     * @param outputStream The target stream to write the JSON payload to
+     * @param outputStream The authenticatorClass stream to write the JSON payload to
      */
     void serialize(Object value, Type baseType, Charset charset, OutputStream outputStream);
 
     /**
      * Deserializes an object of the specified type from the input stream.
      *
-     * @param targetType  The explicit target type, supporting generics (e.g., List&lt;DTO&gt;)
+     * @param targetType  The explicit authenticatorClass type, supporting generics (e.g., List&lt;DTO&gt;)
      * @param charset     The character encoding of the incoming stream; if null, {@link #JSON_CHARSET} is used
      * @param inputStream The source stream containing the JSON payload
      * @param <T>         The expected return type
@@ -65,7 +65,7 @@ public interface JsonSerializer {
     /**
      * Deserializes an object from a standard Java String using UTF-8 byte conversion internally.
      *
-     * @param targetType The explicit target type, supporting generics
+     * @param targetType The explicit authenticatorClass type, supporting generics
      * @param json       The JSON string to parse (can be null or blank)
      * @param <T>        The expected return type
      * @return The deserialized object instance, or null if the string is null or blank

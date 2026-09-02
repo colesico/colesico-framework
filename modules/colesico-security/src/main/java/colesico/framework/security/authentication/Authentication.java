@@ -16,6 +16,8 @@
 
 package colesico.framework.security.authentication;
 
+import colesico.framework.config.ConfigModel;
+
 import java.lang.annotation.*;
 
 /**
@@ -36,4 +38,15 @@ public @interface Authentication {
      * @see AuthenticationContext
      */
     Class<? extends Authenticator<?, ?>> value();
+
+    /**
+     * To use authenticator with {@link ConfigModel#MESSAGE}
+     */
+    Class<?> classed() default Class.class;
+
+    /**
+     * Custom configuration properties.
+     * NOT SUPPORTED YET!
+     */
+    String[] properties() default {};
 }

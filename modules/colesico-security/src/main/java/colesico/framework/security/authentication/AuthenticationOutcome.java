@@ -55,8 +55,9 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Forward flow to specified authenticator.
      */
-    record Forward<A extends AuthenticationMessage>(Class<? extends Authenticator<A, ?>> target,
-                                                    A message
+    record Forward<A extends AuthenticationMessage>(
+            Authenticator<A, ?> authenticator,
+            A message
     ) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
@@ -88,5 +89,14 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     static Skip skip(String reason) {
         return new Skip(reason);
     }
+
+    /**
+     * Creates default forward outcome.
+     */
+    static <A extends AuthenticationMessage> Forward<A> forward(Authenticator<A, ?> authenticator,
+                                                                A message) {
+        return new Forward<>(authenticator, message);
+    }
+
 
 }

@@ -16,7 +16,7 @@
 
 package colesico.framework.security;
 
-import colesico.framework.ioc.Ioc;
+import colesico.framework.security.authentication.AuthenticatedIdentity;
 import colesico.framework.security.authentication.Authenticator;
 
 import java.util.*;
@@ -28,16 +28,9 @@ import java.util.*;
  * the subject's unique identifier and a set of claims (attributes and permissions)
  * describing the entity's properties and authorities.
  * <p>
- * The framework provides a default implementation: {@link Identity.Default}
+ * The framework provides a default implementation: {@link AuthenticatedIdentity}
  */
-public interface Identity {
-
-    /**
-     * Specifies {@link Authenticator} class that issued this identity
-     * to retrieve instance from {@link Ioc} to route security actions, such as logout,
-     * to the correct authentication.
-     */
-    String AUTHENTICATOR_CLAIM = "authenticator";
+public sealed interface Identity permits AuthenticatedIdentity {
 
     /**
      * The claim key for the roles' holder.
@@ -86,7 +79,9 @@ public interface Identity {
      * Provides built-in support for Roles (RBAC).
      */
     default Set<String> roles() {
-        return claim(ROLES_CLAIM, Set.class).orElse(Collections.emptySet());
+        return claim(ROLES_CLAIM, Set.class)
+                .map(set -> (Set<String>) set)
+                .orElse(Collections.emptySet());
     }
 
     /**
@@ -100,7 +95,9 @@ public interface Identity {
      * Provides built-in support for Permissions/Authorities.
      */
     default Set<String> permissions() {
-        return claim(PERMISSIONS_CLAIM, Set.class).orElse(Collections.emptySet());
+        return claim(PERMISSIONS_CLAIM, Set.class)
+                .map(set -> (Set<String>) set)
+                .orElse(Collections.emptySet());
     }
 
     /**
@@ -110,18 +107,4 @@ public interface Identity {
         return permissions().contains(permission);
     }
 
-    /**
-     * The default implementation of the {@link Identity} interface.
-     */
-    record Default(String id, Map<String, Object> claims) implements Identity {
-
-        public static Default of(String id) {
-            return new Default(id, new HashMap<>());
-        }
-
-        public static Default of(String id, Map<String, Object> claims) {
-            return new Default(id, claims);
-        }
-
-    }
 }

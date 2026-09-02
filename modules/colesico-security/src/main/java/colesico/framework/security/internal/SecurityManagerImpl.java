@@ -16,7 +16,6 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.authentication.*;
@@ -37,14 +36,14 @@ public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
     protected final AuthenticationContext authenticationContext;
-    private final Supplier<Authenticator<AuthenticationMessage, LogoutMessage>> authenticatorFactory;
+    private final AuthenticatorFactory authenticatorFactory;
 
     public SecurityManagerImpl(IdentityContext identityContext,
                                AuthenticationContext authenticationContext,
-                               Supplier<Authenticator> authenticatorFactory) {
+                               AuthenticatorFactory authenticatorFactory) {
         this.identityContext = identityContext;
         this.authenticationContext = authenticationContext;
-        this.authenticatorFactory = (Supplier) authenticatorFactory;
+        this.authenticatorFactory = authenticatorFactory;
     }
 
     protected <M extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authenticator<M, ?> authenticator, M message) {
@@ -71,14 +70,13 @@ public class SecurityManagerImpl implements SecurityManager {
             case AuthenticationOutcome.Stage stage -> stage;
             case AuthenticationOutcome.Failure failure -> failure;
             case AuthenticationOutcome.Skip skip -> skip;
-            case AuthenticationOutcome.Forward<?> forward -> {
-                var targetClass = forward.target();
-                if (targetClass == null) {
-                    throw new SecurityException("Forward target authenticator class is null");
+            case AuthenticationOutcome.Forward forward -> {
+                if (forward.authenticator() == null) {
+                    throw new SecurityException("Forward authenticator is not specified");
                 }
 
-                var targetAuthenticator = authenticatorFactory.get(targetClass);
-                yield invokeAuthenticate(targetAuthenticator, forward.message());
+                AuthenticationOutcome.Forward<M> f = forward;
+                yield invokeAuthenticate(f.authenticator(), f.message());
             }
         };
     }
@@ -142,11 +140,8 @@ public class SecurityManagerImpl implements SecurityManager {
             throw new SecurityException("Identity is null");
         }
 
-        var authClass = identity.claim(Identity.AUTHENTICATOR_CLAIM, Authenticator.class);
-
-        if (authClass.isPresent()) {
-            var authenticator = authenticatorFactory.get(authClass.get());
-            authenticator.logout(new LogoutMessage.Default(identity));
+        if (identity instanceof AuthenticatedIdentity ai) {
+            ai.authenticator().ifPresent(a -> a.logout(new LogoutMessage.Default(identity)));
         }
     }
 
