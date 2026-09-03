@@ -38,7 +38,7 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     record Stage(Object message) implements AuthenticationOutcome {
         @Override
         public AuthenticationResult result() {
-            return AuthenticationResult.stage();
+            return AuthenticationResult.stage(message);
         }
     }
 
@@ -75,8 +75,8 @@ public sealed interface AuthenticationOutcome permits AuthenticationOutcome.Fail
     /**
      * Creates default failure outcome.
      */
-    static Failure failure(final Object error) {
-        return new Failure(error);
+    static Failure failure(final Object message) {
+        return new Failure(message);
     }
 
     static Stage stage(final Object message) {
