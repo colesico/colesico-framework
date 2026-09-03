@@ -180,6 +180,8 @@ public class SecurityModulator extends Modulator {
             } else {
                 resHandelrCb.add("$T.class", TypeName.get(handlerClass));
             }
+        } else {
+            resHandelrCb.add("null");
         }
 
         // Add authentication interceptor field
