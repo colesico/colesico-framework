@@ -11,6 +11,9 @@ abstract public class JwtConfigPrototype {
      */
     abstract public String accessSecret();
 
+    /**
+     * Minimum 32 chars
+     */
     abstract public String refreshSecret();
 
     /**
