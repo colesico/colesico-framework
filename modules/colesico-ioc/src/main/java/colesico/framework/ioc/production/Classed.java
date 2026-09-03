@@ -36,5 +36,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface Classed {
+    /**
+     *  Classifier
+     */
     Class<?> value();
 }

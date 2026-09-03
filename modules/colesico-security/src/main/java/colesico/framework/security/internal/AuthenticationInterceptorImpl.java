@@ -1,6 +1,5 @@
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.production.Supplier;
 import colesico.framework.security.SecurityManager;
 import colesico.framework.security.authentication.*;
 import colesico.framework.service.interception.InvocationContext;
@@ -12,14 +11,14 @@ import java.util.Collection;
 @Singleton
 public class AuthenticationInterceptorImpl implements AuthenticationInterceptor {
 
-    private final AuthenticatorFactory authenticatorFactory;
+    private final AuthenticationFactory authenticationFactory;
     private final SecurityManager securityManager;
     private final AuthenticationContext authContext;
 
-    public AuthenticationInterceptorImpl(AuthenticatorFactory authenticatorFactory,
+    public AuthenticationInterceptorImpl(AuthenticationFactory authenticationFactory,
                                          SecurityManager securityManager,
                                          AuthenticationContext authContext) {
-        this.authenticatorFactory = authenticatorFactory;
+        this.authenticationFactory = authenticationFactory;
         this.securityManager = securityManager;
         this.authContext = authContext;
     }
@@ -30,7 +29,7 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
         Collection<Authenticator<?, ?>> authenticators = new ArrayList<>();
 
         for (var authSpec : options.authenticators()) {
-            authenticators.add(authenticatorFactory.get(authSpec.authenticatorClass(), authSpec.classed()));
+            authenticators.add(authenticationFactory.getAuthenticator(authSpec.authenticatorClass(), authSpec.classed()));
         }
 
         switch (options.strategy()) {
@@ -46,12 +45,17 @@ public class AuthenticationInterceptorImpl implements AuthenticationInterceptor 
 
             case STRICT:
                 var result = securityManager.authenticate(authenticators);
-                return switch (result) {
-                    case AuthenticationResult.Success _ -> context.proceed();
-                    case AuthenticationResult.Stage _ -> null;
-                    case AuthenticationResult.Failure f ->
-                            throw new UnauthenticatedException(f.error() != null ? f.error().toString() : "Unauthenticated");
-                };
+                if (options.resultHandlerClass() != null) {
+                    var resultHandler = authenticationFactory.getResultHandler(options.resultHandlerClass());
+                    return resultHandler.handleResult(result, context);
+                } else {
+                    return switch (result) {
+                        case AuthenticationResult.Success _ -> context.proceed();
+                        case AuthenticationResult.Stage _ -> null;
+                        case AuthenticationResult.Failure f ->
+                                throw new UnauthenticatedException(f.message() != null ? f.message().toString() : "Unauthenticated");
+                    };
+                }
             default:
                 throw new IllegalArgumentException("Unsupported strategy: " + options.strategy());
         }

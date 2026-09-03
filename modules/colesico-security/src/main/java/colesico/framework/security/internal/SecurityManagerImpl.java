@@ -36,14 +36,14 @@ public class SecurityManagerImpl implements SecurityManager {
 
     protected final IdentityContext identityContext;
     protected final AuthenticationContext authenticationContext;
-    private final AuthenticatorFactory authenticatorFactory;
+    private final AuthenticationFactory authenticationFactory;
 
     public SecurityManagerImpl(IdentityContext identityContext,
                                AuthenticationContext authenticationContext,
-                               AuthenticatorFactory authenticatorFactory) {
+                               AuthenticationFactory authenticationFactory) {
         this.identityContext = identityContext;
         this.authenticationContext = authenticationContext;
-        this.authenticatorFactory = authenticatorFactory;
+        this.authenticationFactory = authenticationFactory;
     }
 
     protected <M extends AuthenticationMessage> AuthenticationOutcome invokeAuthenticate(Authenticator<M, ?> authenticator, M message) {

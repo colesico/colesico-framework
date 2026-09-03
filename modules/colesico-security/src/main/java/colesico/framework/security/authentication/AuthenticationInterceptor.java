@@ -2,27 +2,24 @@ package colesico.framework.security.authentication;
 
 import colesico.framework.service.interception.Interceptor;
 
-import java.util.Map;
-
 @FunctionalInterface
 public interface AuthenticationInterceptor extends Interceptor<AuthenticationInterceptor.Options> {
     record Options(AuthenticatorSpec[] authenticators,
-                   AuthenticationPolicy.Strategy strategy) {
+                   AuthenticationOptions.Strategy strategy,
+                   Class<? extends AuthenticationResultHandler> resultHandlerClass) {
 
     }
 
     record AuthenticatorSpec(
             Class<? extends Authenticator<?, ?>> authenticatorClass,
-            Class<?> classed,
-            Map<String, String> properties
+            Class<?> classed
     ) {
         public static final String OF_METHOD = "of";
-        
+
         public static AuthenticatorSpec of(Class<? extends Authenticator<?, ?>> authenticatorClass,
-                                           Class<?> classed,
-                                           Map<String, String> properties
+                                           Class<?> classed
         ) {
-            return new AuthenticatorSpec(authenticatorClass, classed, properties);
+            return new AuthenticatorSpec(authenticatorClass, classed);
         }
     }
 }

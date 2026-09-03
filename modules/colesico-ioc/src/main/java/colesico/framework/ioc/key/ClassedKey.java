@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
  * @see Key
  */
 public final class ClassedKey<T> implements Key<T> {
+
     private final String typeName;
     private final String classifier;
 

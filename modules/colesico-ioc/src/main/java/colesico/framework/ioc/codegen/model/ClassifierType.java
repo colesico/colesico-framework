@@ -6,6 +6,7 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.type.TypeMirror;
 
 public class ClassifierType extends ParserType {
+
     private final TypeMirror originType;
 
     public ClassifierType(ProcessingEnvironment processingEnv, TypeMirror originType) {

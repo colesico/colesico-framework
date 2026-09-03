@@ -16,11 +16,8 @@
 
 package colesico.framework.security.internal;
 
-import colesico.framework.ioc.Ioc;
-import colesico.framework.ioc.message.IocMessage;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.ioc.scope.Unscoped;
 import colesico.framework.security.Identity;
 import colesico.framework.security.IdentityContext;
 import colesico.framework.security.SecurityManager;
@@ -35,7 +32,7 @@ import jakarta.inject.Singleton;
 @Produce(value = AuthenticationContextImpl.class, keyType = AuthenticationContext.class, scoped = Singleton.class)
 @Produce(value = AuthenticationInterceptorImpl.class, keyType = AuthenticationInterceptor.class)
 @Produce(RequireIdentityAudit.class)
-@Produce(AuthenticatorFactory.class)
+@Produce(AuthenticationFactory.class)
 public class SecurityProducer {
 
     /**

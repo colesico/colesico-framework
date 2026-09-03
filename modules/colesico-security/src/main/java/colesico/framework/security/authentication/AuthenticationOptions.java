@@ -10,12 +10,17 @@ import java.lang.annotation.*;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface AuthenticationPolicy {
+public @interface AuthenticationOptions {
 
     /**
      * Determines the execution strategy for authentication.
      */
-    Strategy value();
+    Strategy strategy();
+
+    /**
+     * Custom authentication result handler
+     */
+    Class<? extends AuthenticationResultHandler> resultHandler() default AuthenticationResultHandler.class;
 
     /**
      * Strategies defining how and when authentication is triggered.

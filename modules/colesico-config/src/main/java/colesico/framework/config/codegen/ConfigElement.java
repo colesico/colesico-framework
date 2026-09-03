@@ -78,12 +78,12 @@ public class ConfigElement {
     private final boolean defaultMessage;
 
     /**
-     * If @Classed annotation is defined on configuration instance
+     * If {@link colesico.framework.ioc.production.Classed} annotation is defined on configuration instance
      */
     private final TypeMirror classedQualifier;
 
     /**
-     * If @Named annotation is defined on configuration instance
+     * If {@link jakarta.inject.Named} annotation is defined on configuration instance
      */
     private final String namedQualifier;
 

@@ -11,21 +11,21 @@ public sealed interface AuthenticationResult
     record Success(Identity identity) implements AuthenticationResult {
     }
 
-    record Failure(Object error) implements AuthenticationResult {
+    record Failure(Object message) implements AuthenticationResult {
     }
 
-    record Stage() implements AuthenticationResult {
+    record Stage(Object message) implements AuthenticationResult {
     }
 
     static Success success(Identity identity) {
         return new Success(identity);
     }
 
-    static Failure failure(Object error) {
-        return new Failure(error);
+    static Failure failure(Object message) {
+        return new Failure(message);
     }
 
-    static Stage stage() {
-        return new Stage();
+    static Stage stage(Object message) {
+        return new Stage(message);
     }
 }

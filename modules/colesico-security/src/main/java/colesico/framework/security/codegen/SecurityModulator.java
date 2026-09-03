@@ -22,10 +22,9 @@ import colesico.framework.assist.codegen.ArrayCodegen;
 import colesico.framework.assist.codegen.CodegenUtils;
 import colesico.framework.assist.codegen.model.AnnotationAssist;
 import colesico.framework.assist.codegen.model.ClassElement;
-import colesico.framework.ioc.codegen.model.ClassifierType;
 import colesico.framework.security.authentication.Authentication;
 import colesico.framework.security.authentication.AuthenticationInterceptor;
-import colesico.framework.security.authentication.AuthenticationPolicy;
+import colesico.framework.security.authentication.AuthenticationOptions;
 import colesico.framework.security.authentication.Authentications;
 import colesico.framework.security.authorization.RequireIdentity;
 import colesico.framework.security.authorization.RequireIdentityAudit;
@@ -165,14 +164,22 @@ public class SecurityModulator extends Modulator {
             return;
         }
 
-        AnnotationAssist<AuthenticationPolicy> authenticationPolicy = serviceMethod.originMethod().annotation(AuthenticationPolicy.class);
-        if (authenticationPolicy == null) {
-            authenticationPolicy = service.originClass().annotation(AuthenticationPolicy.class);
+        AnnotationAssist<AuthenticationOptions> authenticationOptions = serviceMethod.originMethod().annotation(AuthenticationOptions.class);
+        if (authenticationOptions == null) {
+            authenticationOptions = service.originClass().annotation(AuthenticationOptions.class);
         }
 
-        var strategy = AuthenticationPolicy.Strategy.IF_NECESSARY.name();
-        if (authenticationPolicy != null) {
-            strategy = authenticationPolicy.unwrap().value().name();
+        CodeBlock.Builder resHandelrCb = CodeBlock.builder();
+
+        var strategy = AuthenticationOptions.Strategy.IF_NECESSARY.name();
+        if (authenticationOptions != null) {
+            strategy = authenticationOptions.unwrap().strategy().name();
+            TypeMirror handlerClass = authenticationOptions.valueTypeMirror(AuthenticationOptions::resultHandler);
+            if (CodegenUtils.isAssignable(Class.class, handlerClass, processorContext.processingEnv())) {
+                resHandelrCb.add("null");
+            } else {
+                resHandelrCb.add("$T.class", TypeName.get(handlerClass));
+            }
         }
 
         // Add authentication interceptor field
@@ -194,19 +201,22 @@ public class SecurityModulator extends Modulator {
             } else {
                 classedCb.add("$T.class", TypeName.get(classifier));
             }
-            String[] propertiesArray = authentication.unwrap().properties();
 
-            paramsCodegen.add("\n $T.$N($T.class, $L, $L)",
+            paramsCodegen.add("\n $T.$N($T.class, $L)",
                     ClassName.get(AuthenticationInterceptor.AuthenticatorSpec.class),
                     AuthenticationInterceptor.AuthenticatorSpec.OF_METHOD,
                     TypeName.get(authenticatorClass),
-                    classedCb.build(),
-                    parseAuthenticationProps(propertiesArray));
+                    classedCb.build()
+            );
         }
         paramsCode.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
 
 
-        paramsCode.add(",\n $T.$L)", ClassName.get(AuthenticationPolicy.Strategy.class), strategy);
+        paramsCode.add(",\n $T.$L,\n $L)",
+                ClassName.get(AuthenticationOptions.Strategy.class),
+                strategy,
+                resHandelrCb.build()
+        );
 
         // Add interceptor invocation code
         CodeBlock.Builder interceptorCode = CodeBlock.builder();
@@ -215,23 +225,4 @@ public class SecurityModulator extends Modulator {
                 new InterceptionElement(interceptorCode.build(), paramsCode.build()));
     }
 
-    protected CodeBlock parseAuthenticationProps(String[] properties) {
-        CodeBlock.Builder cb = CodeBlock.builder();
-        if (properties.length == 0) {
-            cb.add("null");
-        } else {
-            ArrayCodegen paramsCodegen = new ArrayCodegen();
-            for (var prop : properties) {
-                String[] kv = prop.split("=", 1);
-                if (kv.length < 2) {
-                    kv = new String[]{"value", kv[0]};
-                }
-                paramsCodegen.add("$S, $S", kv[0], kv[1]);
-            }
-            cb.add("$T.of(");
-            cb.add(paramsCodegen.toFormat(), paramsCodegen.toValues());
-            cb.add(")");
-        }
-        return cb.build();
-    }
 }

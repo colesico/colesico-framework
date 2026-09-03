@@ -33,7 +33,7 @@ import java.lang.annotation.*;
 public @interface Authentication {
 
     /**
-     * {@link Authenticator}s class that will be tried.
+     * {@link Authenticator}s class that will be used to authenticate.
      *
      * @see AuthenticationContext
      */
@@ -44,9 +44,4 @@ public @interface Authentication {
      */
     Class<?> classed() default Class.class;
 
-    /**
-     * Custom configuration properties.
-     * NOT SUPPORTED YET!
-     */
-    String[] properties() default {};
 }

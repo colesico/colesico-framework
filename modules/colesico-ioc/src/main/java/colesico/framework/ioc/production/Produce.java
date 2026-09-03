@@ -75,9 +75,7 @@ public @interface Produce {
     String named() default "";
 
     /**
-     * Analogue of the @Classed annotation
-     *
-     * @see Classed
+     * Analogue of the {@link Classed} annotation
      */
     Class<?> classed() default Class.class;
 
