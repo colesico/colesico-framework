@@ -41,6 +41,8 @@ public class DictionaryElement {
      */
     private final Set<String> extraTranslations = new HashSet<>();
 
+    private boolean capitalizeKeys = false;
+
     private final Set<MethodElement> keyMethods = new LinkedHashSet<>();
 
     public DictionaryElement(ClassElement dictionaryInterface) {
@@ -59,6 +61,8 @@ public class DictionaryElement {
             bName = bName.replace('.', '/');
         }
         this.baseName = bName;
+
+        this.capitalizeKeys = dictAnn.unwrap().capitalizeKeys();
 
         this.extraTranslations.addAll(Arrays.asList(dictAnn.unwrap().extraTranslations()));
     }
@@ -98,6 +102,14 @@ public class DictionaryElement {
 
     public Set<String> extraTranslations() {
         return extraTranslations;
+    }
+
+    public boolean capitalizeKeys() {
+        return capitalizeKeys;
+    }
+
+    public void setCapitalizeKeys(boolean capitalizeKeys) {
+        this.capitalizeKeys = capitalizeKeys;
     }
 
     @Override

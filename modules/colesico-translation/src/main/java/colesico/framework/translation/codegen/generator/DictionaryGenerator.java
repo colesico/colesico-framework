@@ -75,6 +75,9 @@ public class DictionaryGenerator {
             t9nKey = t9nKeyAnn.unwrap().value();
         } else {
             t9nKey = keyMethod.name();
+            if (dictionaryElement.capitalizeKeys()) {
+                t9nKey = t9nKey.substring(0, 1).toUpperCase() + t9nKey.substring(1);
+            }
         }
 
         cb.add("$S", t9nKey);

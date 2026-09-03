@@ -43,4 +43,9 @@ public @interface Dictionary {
      *  Example: {"ca","nl-BE","en-UK",""}
      */
     String[] extraTranslations() default {};
+
+    /**
+     * Capitalize automatic translation key names
+     */
+    boolean capitalizeKeys() default false;
 }
