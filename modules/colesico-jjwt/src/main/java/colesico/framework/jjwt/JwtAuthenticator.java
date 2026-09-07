@@ -12,13 +12,13 @@ import jakarta.inject.Inject;
 import java.util.HashMap;
 import java.util.Map;
 
-abstract public class Jwt implements Authenticator<JwtMessage, LogoutMessage> {
+abstract public class JwtAuthenticator implements Authenticator<JwtMessage, LogoutMessage> {
 
     protected final JwtTokenUtils tokenUtils;
     protected final JwtClient client;
 
     @Inject
-    public Jwt(JwtTokenUtils tokenUtils, JwtClient client) {
+    public JwtAuthenticator(JwtTokenUtils tokenUtils, JwtClient client) {
         this.tokenUtils = tokenUtils;
         this.client = client;
     }
