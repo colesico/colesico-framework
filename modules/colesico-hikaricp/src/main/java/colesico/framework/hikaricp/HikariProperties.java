@@ -66,6 +66,10 @@ abstract public class HikariProperties extends HikariConfigPrototype {
         return "META-INF";
     }
 
+    protected HikariConfig createConfig(Properties props) {
+        return new HikariConfig(props);
+    }
+
     @Override
     public final HikariConfig hikariConfig() {
 
@@ -76,7 +80,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
             logger.info("Read HikariCP configuration from file: " + fullPath);
             try (FileInputStream is = new FileInputStream(fullPath)) {
                 props.load(is);
-                return new HikariConfig(props);
+                return createConfig(props);
             } catch (Exception e) {
                 String errorMsg = "Error reading HicariCP config from file: " + fullPath + "; " + ExceptionUtils.getRootCauseMessage(e);
                 logger.error(errorMsg);
