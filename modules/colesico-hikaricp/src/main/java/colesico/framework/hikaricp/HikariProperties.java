@@ -95,7 +95,7 @@ abstract public class HikariProperties extends HikariConfigPrototype {
             if (is != null) {
                 logger.info("Read HikariCP configuration from classpath resource: " + fullPath);
                 props.load(is);
-                return new HikariConfig(props);
+                return createConfig(props);
             } else {
                 throw new RuntimeException("HicariCP config file not found: " + fullPath);
             }
