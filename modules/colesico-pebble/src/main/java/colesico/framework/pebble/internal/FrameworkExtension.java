@@ -71,7 +71,7 @@ public class FrameworkExtension extends AbstractExtension {
         functions.put(T9nFunction.FUNCTION_NAME, new T9nFunction());
         functions.put(IdentityFunction.FUNCTION_NAME, new IdentityFunction(securityManager));
         functions.put(ProfileFunction.FUNCTION_NAME, new ProfileFunction(profileManager));
-        functions.put(EnvFunction.FUNCTION_NAME, new EnvFunction());
+        functions.put(EnvironmentVarFunction.FUNCTION_NAME, new EnvironmentVarFunction());
         functions.put(SystemPropertyFunction.FUNCTION_NAME, new SystemPropertyFunction());
         functions.put(IifFunction.FUNCTION_NAME, new IifFunction());
         return functions;

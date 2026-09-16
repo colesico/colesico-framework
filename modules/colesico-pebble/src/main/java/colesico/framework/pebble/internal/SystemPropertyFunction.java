@@ -11,7 +11,7 @@ import java.util.Map;
  * Return given system property variable or test it value
  */
 public class SystemPropertyFunction implements Function {
-    public static final String FUNCTION_NAME = "systemProperty";
+    public static final String FUNCTION_NAME = "sysProp";
 
     @Override
     public Object execute(Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) {

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Return given environment variable or test it value
  */
-public class EnvFunction implements Function {
+public class EnvironmentVarFunction implements Function {
     public static final String FUNCTION_NAME = "env";
 
     @Override
