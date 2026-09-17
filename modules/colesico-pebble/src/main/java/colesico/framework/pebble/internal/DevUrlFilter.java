@@ -17,7 +17,6 @@
 package colesico.framework.pebble.internal;
 
 import colesico.framework.assist.StringUtils;
-import colesico.framework.translation.TranslationBundle;
 import io.pebbletemplates.pebble.error.PebbleException;
 import io.pebbletemplates.pebble.extension.Filter;
 import io.pebbletemplates.pebble.template.EvaluationContext;
@@ -36,12 +35,12 @@ public final class DevUrlFilter implements Filter {
     /**
      * UI development url env variable name
      */
-    public static String UI_DEV_URL_ENV = "UI_DEV_URL";
+    public static String UI_DEV_SERVER_ENV = "UI_DEV_SERVER";
 
     /**
      * UI development url  system property name
      */
-    public static String UI_DEV_URL_ARG = "ui.dev.url";
+    public static String UI_DEV_URL_ARG = "ui.dev.server";
 
     public DevUrlFilter() {
     }
@@ -63,7 +62,7 @@ public final class DevUrlFilter implements Filter {
 
         var devUrl = (String) args.get(String.valueOf(0));
 
-        var devServer = System.getenv(UI_DEV_URL_ENV);
+        var devServer = System.getenv(UI_DEV_SERVER_ENV);
         if (StringUtils.isBlank(devServer)) {
             devServer = System.getProperty(UI_DEV_URL_ARG);
         }
