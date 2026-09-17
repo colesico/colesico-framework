@@ -40,7 +40,7 @@ public final class DevUrlFilter implements Filter {
     /**
      * UI development url  system property name
      */
-    public static String UI_DEV_URL_ARG = "ui.dev.server";
+    public static String UI_DEV_URL_ARG = "uiDevServer";
 
     public DevUrlFilter() {
     }
