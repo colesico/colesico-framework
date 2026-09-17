@@ -59,6 +59,7 @@ public class FrameworkExtension extends AbstractExtension {
     public Map<String, Filter> getFilters() {
         Map<String, Filter> filters = new HashMap<>();
         filters.put(T9nFilter.FILTER_NAME, new T9nFilter());
+        filters.put(DevUrlFilter.FILTER_NAME, new DevUrlFilter());
         return filters;
     }
 
@@ -71,8 +72,8 @@ public class FrameworkExtension extends AbstractExtension {
         functions.put(T9nFunction.FUNCTION_NAME, new T9nFunction());
         functions.put(IdentityFunction.FUNCTION_NAME, new IdentityFunction(securityManager));
         functions.put(ProfileFunction.FUNCTION_NAME, new ProfileFunction(profileManager));
-        functions.put(EnvironmentVarFunction.FUNCTION_NAME, new EnvironmentVarFunction());
-        functions.put(SystemPropertyFunction.FUNCTION_NAME, new SystemPropertyFunction());
+        functions.put(EnvFunction.FUNCTION_NAME, new EnvFunction());
+        functions.put(ArgFunction.FUNCTION_NAME, new ArgFunction());
         functions.put(IifFunction.FUNCTION_NAME, new IifFunction());
         return functions;
     }

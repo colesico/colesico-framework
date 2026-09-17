@@ -8,21 +8,22 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Return given environment variable or test it value
+ * Return system property or default value
  */
-public class EnvironmentVarFunction implements Function {
-    public static final String FUNCTION_NAME = "env";
+public class ArgFunction implements Function {
+    public static final String FUNCTION_NAME = "arg";
 
     @Override
     public Object execute(Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) {
         var name = (String) args.get("0");
-        var expectedValue = (String) args.get("1");
+        var defaultValue = (String) args.get("1");
 
-        if (expectedValue == null) {
-            return System.getenv(name);
-        } else {
-            return Boolean.valueOf(expectedValue.equals(System.getenv(name)));
+        var value = System.getProperty(name);
+        if (value == null) {
+            return defaultValue;
         }
+
+        return value;
     }
 
     @Override

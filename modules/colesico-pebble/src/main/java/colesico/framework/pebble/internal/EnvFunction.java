@@ -8,21 +8,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Return given system property variable or test it value
+ * Return  environment variable or default value
  */
-public class SystemPropertyFunction implements Function {
-    public static final String FUNCTION_NAME = "sysProp";
+public class EnvFunction implements Function {
+    public static final String FUNCTION_NAME = "env";
 
     @Override
     public Object execute(Map<String, Object> args, PebbleTemplate self, EvaluationContext context, int lineNumber) {
         var name = (String) args.get("0");
-        var expectedValue = (String) args.get("1");
+        var defaultValue = (String) args.get("1");
 
-        if (expectedValue == null) {
-            return System.getProperty(name);
-        } else {
-            return Boolean.valueOf(expectedValue.equals(System.getProperty(name)));
+        var value = System.getenv(name);
+        
+        if (value == null) {
+            return defaultValue ;
         }
+
+        return value;
     }
 
     @Override
