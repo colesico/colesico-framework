@@ -75,6 +75,7 @@ public class FrameworkExtension extends AbstractExtension {
         functions.put(EnvFunction.FUNCTION_NAME, new EnvFunction());
         functions.put(ArgFunction.FUNCTION_NAME, new ArgFunction());
         functions.put(IifFunction.FUNCTION_NAME, new IifFunction());
+        functions.put(DevUrlFunction.FUNCTION_NAME, new DevUrlFunction());
         return functions;
     }
 

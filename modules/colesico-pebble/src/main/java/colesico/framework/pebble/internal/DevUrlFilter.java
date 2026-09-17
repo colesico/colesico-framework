@@ -25,22 +25,15 @@ import io.pebbletemplates.pebble.template.PebbleTemplate;
 import java.util.List;
 import java.util.Map;
 
+import static colesico.framework.pebble.internal.DevUrlFunction.UI_DEV_SERVER_ENV;
+import static colesico.framework.pebble.internal.DevUrlFunction.UI_DEV_URL_ARG;
+
 /**
  * Override production assets url (js, css files) to dev server
  */
 public final class DevUrlFilter implements Filter {
 
     public static final String FILTER_NAME = "devUrl";
-
-    /**
-     * UI development url env variable name
-     */
-    public static String UI_DEV_SERVER_ENV = "UI_DEV_SERVER";
-
-    /**
-     * UI development url  system property name
-     */
-    public static String UI_DEV_URL_ARG = "uiDevServer";
 
     public DevUrlFilter() {
     }
@@ -58,9 +51,13 @@ public final class DevUrlFilter implements Filter {
                     FILTER_NAME + " filter can be applied only to  string value. Current value=" + input,
                     lineNumber, pebbleTemplate.getName());
         }
-        String prodUrl = (String) input;
+
+        String url = (String) input;
 
         var devUrl = (String) args.get(String.valueOf(0));
+        if (StringUtils.isBlank(devUrl)) {
+            devUrl = url;
+        }
 
         var devServer = System.getenv(UI_DEV_SERVER_ENV);
         if (StringUtils.isBlank(devServer)) {
@@ -68,7 +65,7 @@ public final class DevUrlFilter implements Filter {
         }
 
         if (StringUtils.isBlank(devServer)) {
-            return prodUrl;
+            return url;
         } else {
             return devServer + devUrl;
         }
