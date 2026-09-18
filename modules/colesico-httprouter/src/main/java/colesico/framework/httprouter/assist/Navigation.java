@@ -23,7 +23,6 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.httprouter.Router;
 import colesico.framework.httprouter.RouterException;
-import colesico.framework.service.ServiceProxy;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -36,11 +35,16 @@ import java.util.*;
  */
 public class Navigation {
 
-    protected String uri;
+    protected Action action = Action.REDIRECT;
+
     protected Class<?> serviceClass;
-    protected String targetMethod;
+    protected String serviceMethod;
+
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
+    protected String uri;
+
     protected int statusCode = 302;
+
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
     protected final Map<String, List<String>> headers = new HashMap<>();
@@ -54,8 +58,8 @@ public class Navigation {
         return new Navigation().uri(uri);
     }
 
-    public static Navigation of(Class<?> serviceClass, String methodName) {
-        return new Navigation().service(serviceClass).method(methodName);
+    public static Navigation of(Class<?> serviceClass, String serviceMethod) {
+        return new Navigation().serviceClass(serviceClass).serviceMethod(serviceMethod);
     }
 
     public Navigation uri(String uri) {
@@ -63,18 +67,13 @@ public class Navigation {
         return this;
     }
 
-    public Navigation service(Class<?> serviceClass) {
+    public Navigation serviceClass(Class<?> serviceClass) {
         this.serviceClass = serviceClass;
         return this;
     }
 
-    public Navigation service(Object serviceInstance) {
-        this.serviceClass = ((ServiceProxy) serviceInstance).serviceOrigin();
-        return this;
-    }
-
-    public Navigation method(String methodName) {
-        this.targetMethod = methodName;
+    public Navigation serviceMethod(String methodName) {
+        this.serviceMethod = methodName;
         return this;
     }
 
@@ -90,51 +89,11 @@ public class Navigation {
         return this;
     }
 
-    public Navigation queryParam(String name, Character value) {
-        if (value != null) {
-            queryParameters.put(name, Character.toString(value));
-        }
-        return this;
-    }
-
-
-    public Navigation queryParam(String name, Long value) {
-        if (value != null) {
-            queryParameters.put(name, Long.toString(value));
-        }
-        return this;
-    }
-
-    public Navigation queryParam(String name, Integer value) {
-        if (value != null) {
-            queryParameters.put(name, Integer.toString(value));
-        }
-        return this;
-    }
-
-    public Navigation queryParam(String name, Short value) {
-        if (value != null) {
-            queryParameters.put(name, Short.toString(value));
-        }
-        return this;
-    }
-
-    public Navigation queryParam(String name, Boolean value) {
-        if (value != null) {
-            queryParameters.put(name, Boolean.toString(value));
-        }
-        return this;
-    }
-
     /**
      * Set query parameters
      */
-    public Navigation queryParamsMap(Map<String, Object> params) {
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getKey() != null) {
-                queryParameters.put(entry.getKey(), entry.getValue().toString());
-            }
-        }
+    public Navigation queryParams(Map<String, String> params) {
+        this.queryParameters.putAll(params);
         return this;
     }
 
@@ -143,37 +102,11 @@ public class Navigation {
         return this;
     }
 
-    public Navigation routeParam(String name, Long value) {
-        routeParameters.put(name, Long.toString(value));
-        return this;
-    }
-
-    public Navigation routeParam(String name, Integer value) {
-        routeParameters.put(name, Integer.toString(value));
-        return this;
-    }
-
-    public Navigation routeParam(String name, Short value) {
-        routeParameters.put(name, Short.toString(value));
-        return this;
-    }
-
-    public Navigation routeParam(String name, Boolean value) {
-        routeParameters.put(name, Boolean.toString(value));
-        return this;
-    }
-
     /**
      * Set route parameters
      */
-    public Navigation routeParamsMap(Map<String, Object> params) {
-        for (Map.Entry<String, Object> entry : params.entrySet()) {
-            if (entry.getKey() != null) {
-                routeParameters.put(entry.getKey(), entry.getValue().toString());
-            } else {
-                throw new RouterException("Empty route parameter value: " + entry);
-            }
-        }
+    public Navigation routeParams(Map<String, String> params) {
+        this.routeParameters.putAll(params);
         return this;
     }
 
@@ -195,11 +128,29 @@ public class Navigation {
         return this;
     }
 
+    public Navigation headers(Map<String, List<String>> headers) {
+        for (var entry : headers.entrySet()) {
+            this.headers.computeIfAbsent(entry.getKey(), k -> new ArrayList<>())
+                    .addAll(entry.getValue());
+        }
+        return this;
+    }
+
     /**
      * Set HTTP cookie
      */
     public Navigation cookie(HttpCookie cookie) {
         cookies.add(cookie);
+        return this;
+    }
+
+    public Navigation cookies(Set<HttpCookie> cookies) {
+        this.cookies.addAll(cookies);
+        return this;
+    }
+
+    public Navigation action(Action action) {
+        this.action = action;
         return this;
     }
 
@@ -210,10 +161,10 @@ public class Navigation {
         String targetURI;
         if (!StringUtils.isBlank(uri)) {
             targetURI = uri;
-        } else if (this.serviceClass != null && this.targetMethod != null) {
-            List<String> slicedRoute = router.slicedRoute(this.serviceClass, this.targetMethod, this.httpMethod, this.routeParameters);
+        } else if (this.serviceClass != null && this.serviceMethod != null) {
+            List<String> slicedRoute = router.slicedRoute(this.serviceClass, this.serviceMethod, this.httpMethod, this.routeParameters);
             if (slicedRoute == null) {
-                throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + targetMethod + "'");
+                throw new NavigationException("Unknown uri for service '" + serviceClass.getName() + "' and method name '" + serviceMethod + "'");
             }
             slicedRoute.remove(0);
             targetURI = RouteTrie.SEGMENT_DELEMITER + String.join(RouteTrie.SEGMENT_DELEMITER, slicedRoute);
@@ -251,6 +202,13 @@ public class Navigation {
         router.execute(resolution.get());
     }
 
+    public void navigate(Router router, HttpContext context) {
+        switch (action) {
+            case REDIRECT -> redirect(router, context);
+            case FORWARD -> forward(router, context);
+        }
+    }
+
     protected StringBuilder buildParamsStr() {
         StringBuilder paramsStrBuilder = new StringBuilder();
         boolean next = false;
@@ -274,6 +232,11 @@ public class Navigation {
         public NavigationException(String message, Throwable cause) {
             super(message, cause);
         }
+    }
+
+    public enum Action {
+        REDIRECT,
+        FORWARD
     }
 
 }

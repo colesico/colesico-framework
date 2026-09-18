@@ -6,9 +6,9 @@ import colesico.framework.telehttp.ContentType;
 import java.util.*;
 
 /**
- * General tele-http response model
+ * Http tele response with basic http entities support
  */
-abstract public class TeleHttpResponse {
+abstract public class BaseResponse implements HttpTeleResponse {
 
     /**
      * Http status code
@@ -24,20 +24,20 @@ abstract public class TeleHttpResponse {
 
     protected final Set<HttpCookie> cookies;
 
-    public TeleHttpResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies) {
+    public BaseResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies) {
         this.statusCode = statusCode;
         this.contentType = contentType;
         this.headers = headers;
         this.cookies = cookies;
     }
 
-    public TeleHttpResponse addHeader(String name, String value) {
+    public BaseResponse addHeader(String name, String value) {
         List<String> hValues = headers.computeIfAbsent(name, n -> new ArrayList<>());
         hValues.add(value);
         return this;
     }
 
-    public TeleHttpResponse addCookie(HttpCookie cookie) {
+    public BaseResponse addCookie(HttpCookie cookie) {
         cookies.add(cookie);
         return this;
     }
@@ -58,11 +58,7 @@ abstract public class TeleHttpResponse {
         return cookies;
     }
 
-    public final DynamicResponse toDynamic() {
-        return DynamicResponse.of(this);
-    }
-
-    abstract public static class Builder<R extends TeleHttpResponse, B extends Builder<R, B>> {
+    abstract public static class Builder<R extends BaseResponse, B extends Builder<R, B>> {
         protected Integer statusCode;
         protected ContentType contentType;
         protected final Map<String, List<String>> headers = new HashMap<>();

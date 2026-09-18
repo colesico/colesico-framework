@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * General response model with a value
  */
-abstract public class ValueResponse<V> extends TeleHttpResponse {
+abstract public class ValueResponse<V> extends BaseResponse {
 
     protected final V value;
 
@@ -32,7 +32,7 @@ abstract public class ValueResponse<V> extends TeleHttpResponse {
     }
 
     abstract public static class Builder<V, R extends ValueResponse<V>, B extends Builder<V, R, B>>
-            extends TeleHttpResponse.Builder<R, B> {
+            extends BaseResponse.Builder<R, B> {
 
         protected V value;
 

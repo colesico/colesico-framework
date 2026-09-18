@@ -20,24 +20,19 @@ package colesico.framework.telehttp.response;
 import colesico.framework.httprouter.assist.Navigation;
 
 /**
- * Performs http redirect
+ * To perform {@link colesico.framework.httprouter.Router} navigation
  */
-public record RedirectResponse(Navigation navigation) {
+public record NavigationResponse(Navigation navigation) implements HttpTeleResponse {
 
-    public static RedirectResponse of(Class<?> serviceClass, String methodName) {
-        return new RedirectResponse(Navigation.of(serviceClass, methodName));
+    public static NavigationResponse of() {
+        return new NavigationResponse(Navigation.of());
     }
 
-    public static RedirectResponse of(String uri) {
-        return new RedirectResponse(Navigation.of(uri));
+    public static NavigationResponse of(String uri) {
+        return new NavigationResponse(Navigation.of(uri));
     }
 
-    public static RedirectResponse of() {
-        return new RedirectResponse(Navigation.of());
+    public static NavigationResponse of(Class<?> serviceClass, String serviceMethod) {
+        return new NavigationResponse(Navigation.of(serviceClass, serviceMethod));
     }
-
-    public DynamicResponse toDynamic() {
-        return DynamicResponse.of(this);
-    }
-
 }

@@ -10,7 +10,7 @@ import jakarta.inject.Provider;
  * General {@link ValueResponse}  writer.
  */
 abstract public class ValueResponseWriter<V extends ValueResponse<?>, O extends HttpWriteOptions>
-        extends TeleHttpResponseWriter<V, O> {
+        extends BaseResponseWriter<V, O> {
 
 
     public ValueResponseWriter(Provider<HttpResponse> httpResponse) {

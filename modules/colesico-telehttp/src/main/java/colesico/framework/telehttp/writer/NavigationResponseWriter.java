@@ -20,28 +20,30 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.httprouter.Router;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.response.RedirectResponse;
+import colesico.framework.telehttp.response.NavigationResponse;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 /**
- * @author Vladlen Larionov
+ * Performs navigate operation
  */
 @Singleton
-public final class RedirectWriter implements HttpWriter<RedirectResponse, HttpWriteOptions> {
+public final class NavigationResponseWriter implements HttpWriter<NavigationResponse, HttpWriteOptions> {
 
     private final Router router;
     private final Provider<HttpContext> httpContext;
 
-    public RedirectWriter(Router router, Provider<HttpContext> httpContext) {
+    @Inject
+    public NavigationResponseWriter(Router router, Provider<HttpContext> httpContext) {
         this.router = router;
         this.httpContext = httpContext;
     }
 
     @Override
-    public void write(RedirectResponse value, HttpWriteOptions options) {
-        value.navigation().redirect(router, httpContext.get());
+    public void write(NavigationResponse value, HttpWriteOptions options) {
+        value.navigation().navigate(router, httpContext.get());
     }
 
 }

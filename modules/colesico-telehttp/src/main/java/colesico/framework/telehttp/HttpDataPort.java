@@ -3,7 +3,6 @@ package colesico.framework.telehttp;
 import colesico.framework.assist.ExceptionUtils;
 import colesico.framework.teleapi.dataport.DataPort;
 import colesico.framework.teleapi.dataport.TeleFactory;
-import colesico.framework.telehttp.response.DynamicResponse;
 
 abstract public class HttpDataPort<R extends HttpReadOptions, W extends HttpWriteOptions>
         implements DataPort<R, W> {
@@ -38,69 +37,39 @@ abstract public class HttpDataPort<R extends HttpReadOptions, W extends HttpWrit
     @Override
     public <V> void write(V value, W options) {
 
-        // Handle dynamic value
-        Object targetValue;
-        if (value instanceof DynamicResponse(Object resp)) {
-            targetValue = resp;
-        } else {
-            targetValue = value;
-        }
-
         // Check for a custom writer specified in options
         if (options.customWriter() != null) {
             HttpWriter writer = (HttpWriter) teleFactory.writer(options.customWriter());
-            writer.write(targetValue, options);
+            writer.write(value, options);
             return;
         }
 
         // Find writer by the exact runtime class of the value
-        HttpWriter<Object, HttpWriteOptions> writer;
-        if (targetValue == null) {
-            writer = null;
-        } else if (targetValue instanceof Throwable throwable) {
-            writer = findExceptionWriter(throwable);
-        } else {
-            writer = teleFactory.findWriter(targetValue.getClass(), writerBaseClass(), HttpWriter.class);
+        HttpWriter<Object, HttpWriteOptions> writer = null;
+        if (value != null) {
+            writer = teleFactory.findWriter(value.getClass(), writerBaseClass(), HttpWriter.class);
         }
 
         // Find by baseType
         if (writer == null) {
             writer = teleFactory.findWriter(options.baseType(), writerBaseClass(), HttpWriter.class);
-            // Final fallback to the default object writer
-            if (writer == null) {
-                writer = teleFactory.provideWriter(Object.class, writerBaseClass(), HttpWriter.class);
-            }
         }
 
-        writer.write(targetValue, options);
+        if (writer == null && value instanceof HttpTeleException) {
+            writer = teleFactory.provideWriter(HttpTeleException.class, writerBaseClass(), HttpWriter.class);
+        }
+
+        if (writer == null && value instanceof Exception) {
+            writer = teleFactory.provideWriter(Exception.class, writerBaseClass(), HttpWriter.class);
+        }
+
+        // Final fallback to the default object writer
+        if (writer == null) {
+            writer = teleFactory.provideWriter(Object.class, writerBaseClass(), HttpWriter.class);
+        }
+
+        writer.write(value, options);
 
     }
 
-    protected HttpWriter<Object, HttpWriteOptions> findExceptionWriter(final Throwable throwable) {
-
-        // Find by exact runtime class
-        HttpWriter<Object, HttpWriteOptions> writer = teleFactory.findWriter(throwable.getClass(), writerBaseClass(), HttpWriter.class);
-        if (writer != null) {
-            return writer;
-        }
-
-        // Find by runtime class of root cause
-        Throwable rootCause = ExceptionUtils.getRootCause(throwable);
-        if (rootCause != throwable) {
-            writer = teleFactory.findWriter(rootCause.getClass(), writerBaseClass(), HttpWriter.class);
-            if (writer != null) {
-                return writer;
-            }
-        }
-
-        if (throwable instanceof HttpTeleException) {
-            writer = teleFactory.findWriter(HttpTeleException.class, writerBaseClass(), HttpWriter.class);
-            if (writer != null) {
-                return writer;
-            }
-        }
-
-        return teleFactory.findWriter(Exception.class, writerBaseClass(), HttpWriter.class);
-
-    }
 }

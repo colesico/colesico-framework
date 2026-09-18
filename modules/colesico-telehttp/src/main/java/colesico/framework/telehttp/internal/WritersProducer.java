@@ -12,7 +12,7 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(RedirectWriter.class)
-@Produce(ForwardWriter.class)
+@Produce(NavigationResponseWriter.class)
 @Produce(ExceptionResponseWriter.class)
 @Produce(ToStringObjectResponseWriter.class)
 @Produce(StringResponseWriter.class)
@@ -22,15 +22,10 @@ import jakarta.inject.Singleton;
 @Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
-    @Singleton
-    @Classed(RedirectResponse.class)
-    public HttpWriter redirectResponseWriter(RedirectWriter impl) {
-        return impl;
-    }
 
     @Singleton
-    @Classed(ForwardResponse.class)
-    public HttpWriter forwardResponseWriter(ForwardWriter impl) {
+    @Classed(NavigationResponse.class)
+    public HttpWriter navigationResponseWriter(NavigationResponseWriter impl) {
         return impl;
     }
 

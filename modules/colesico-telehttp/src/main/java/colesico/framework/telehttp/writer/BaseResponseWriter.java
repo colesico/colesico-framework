@@ -6,19 +6,19 @@ import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.HttpTeleException;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.response.TeleHttpResponse;
+import colesico.framework.telehttp.response.BaseResponse;
 import jakarta.inject.Provider;
 
 import java.io.*;
 
 /**
- * General {@link TeleHttpResponse} writer
+ * General {@link BaseResponse} writer
  */
-abstract public class TeleHttpResponseWriter<V extends TeleHttpResponse, O extends HttpWriteOptions> implements HttpWriter<V, O> {
+abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpWriteOptions> implements HttpWriter<V, O> {
 
     protected final Provider<HttpResponse> httpResponse;
 
-    public TeleHttpResponseWriter(Provider<HttpResponse> httpResponse) {
+    public BaseResponseWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
     }
 
