@@ -21,11 +21,10 @@ import jakarta.inject.Singleton;
 @Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
-
     @Singleton
-    @Classed(NavigationResponse.class)
-    public HttpWriter navigationResponseWriter(NavigationResponseWriter impl) {
-        return impl;
+    @Classed(ObjectResponse.class)
+    public HttpWriter objectResponseWriter(ToStringObjectResponseWriter imp) {
+        return imp;
     }
 
     @Singleton
@@ -35,9 +34,9 @@ public class WritersProducer {
     }
 
     @Singleton
-    @Classed(ObjectResponse.class)
-    public HttpWriter objectResponseWriter(ToStringObjectResponseWriter imp) {
-        return imp;
+    @Classed(NavigationResponse.class)
+    public HttpWriter navigationResponseWriter(NavigationResponseWriter impl) {
+        return impl;
     }
 
     @Singleton

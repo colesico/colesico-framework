@@ -4,7 +4,7 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriter;
-import colesico.framework.telehttp.HttpTeleException;
+import colesico.framework.telehttp.HttpTeleError;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.BaseResponse;
 import jakarta.inject.Provider;
@@ -63,7 +63,7 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         var httpResponse = this.httpResponse.get();
 
         if (httpResponse.isCommitted()) {
-            throw HttpTeleException.of("HTTP Response is committed while writing response", 500, response);
+            throw HttpTeleError.of("HTTP Response is committed while writing response", 500, response);
         }
 
         if (isEmptyResponse(response)) {
@@ -73,12 +73,12 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
 
         var statusCode = statusCode(response, options, 200);
         if (statusCode == null) {
-            throw HttpTeleException.of("Undefined http status code", 500);
+            throw HttpTeleError.of("Undefined http status code", 500);
         }
 
         var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         if (contentType == null) {
-            throw HttpTeleException.of("Undefined content type", 500);
+            throw HttpTeleError.of("Undefined content type", 500);
         }
 
         httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());
@@ -100,7 +100,7 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
             // Do not close outputStream here, will be closed in http server handler
             outputStream.flush();
         } catch (Exception e) {
-            throw HttpTeleException.of(e, 500);
+            throw HttpTeleError.of(e, 500);
         }
     }
 

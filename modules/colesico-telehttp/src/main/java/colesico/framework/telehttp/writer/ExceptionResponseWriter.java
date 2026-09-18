@@ -1,10 +1,9 @@
 package colesico.framework.telehttp.writer;
 
+import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.security.authentication.UnauthenticatedException;
-import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.HttpTeleException;
+import colesico.framework.telehttp.HttpTeleError;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.response.ExceptionResponse;
 import jakarta.inject.Provider;
@@ -30,12 +29,18 @@ public class ExceptionResponseWriter<O extends HttpWriteOptions>
         if (response.statusCode() != null) {
             return response.statusCode();
         }
-        return switch (response.value()) {
-            case UnauthenticatedException e -> 401;
-            case UnauthorizedException e -> 401;
-            case HttpTeleException e -> e.statusCode() != null ? e.statusCode() : 500;
-            default -> options.statusCode() != null ? options.statusCode() : 500;
-        };
+
+        if (response.value() instanceof HttpTeleError hte) {
+            if (hte.statusCode() != null) {
+                return hte.statusCode();
+            }
+        }
+
+        if (options.statusCode() != null) {
+            return options.statusCode();
+        }
+
+        return 500;
     }
 
     @Override
@@ -43,18 +48,31 @@ public class ExceptionResponseWriter<O extends HttpWriteOptions>
         return 500;
     }
 
-    protected String errorDetails(Exception exception) {
-        return switch (exception) {
-            case UnauthenticatedException e -> "Unauthenticated";
-            case UnauthorizedException e -> "Unauthorized";
-            case HttpTeleException e -> e.details() != null ? e.details().toString() : "Error";
-            default -> "Error";
-        };
+    protected String errorData(ExceptionResponse response) {
+        var exception = response.value();
+
+        String data = "Exception: " + exception.getClass().getCanonicalName();
+        if (!StringUtils.isBlank(exception.getMessage())) {
+            data = data + "; message: " + exception.getMessage();
+        }
+
+        if (exception instanceof HttpTeleError hte) {
+            if (hte.errorCode() != null) {
+                data = data + "; errorCode: " + hte.errorCode();
+            }
+
+            if (hte.details() != null) {
+                data = data + "; details: " + hte.details().toString();
+            }
+
+        }
+
+        return data;
     }
 
     @Override
     protected void write(OutputStream outputStream, ExceptionResponse response, O options) throws IOException {
         var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
-        outputStream.write(errorDetails(response.value()).getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
+        outputStream.write(errorData(response).getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
     }
 }

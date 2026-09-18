@@ -23,24 +23,22 @@ import colesico.framework.telehttp.HttpTeleException;
  */
 public class WebletException extends HttpTeleException {
 
-    public WebletException(String message, Throwable cause, Integer statusCode, Object details) {
-        super(message, cause, statusCode, details);
+    public WebletException() {
     }
 
-    public static WebletException of(String message) {
-        return new WebletException(message, null, null, null);
+    public WebletException(String message) {
+        super(message);
     }
 
-    public static WebletException of(Integer statusCode, Object details) {
-        return new WebletException(String.valueOf(details), null, statusCode, details);
+    public WebletException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public static WebletException of(String message, Integer statusCode, Object details) {
-        return new WebletException(message, null, statusCode, details);
+    public WebletException(Throwable cause) {
+        super(cause);
     }
 
-    public static WebletException of(Throwable cause, Integer statusCode, Object details) {
-        return new WebletException(String.valueOf(details), cause, statusCode, details);
+    public WebletException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
-
 }

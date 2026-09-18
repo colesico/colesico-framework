@@ -17,7 +17,7 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
-import colesico.framework.telehttp.HttpTeleException;
+import colesico.framework.telehttp.HttpTeleError;
 import colesico.framework.telehttp.response.BaseResponse;
 
 import jakarta.inject.Singleton;
@@ -70,18 +70,18 @@ public class CSRFProtector {
         if (originHeader != null) {
             String host = hostFromUrl(originHeader);
             if (!requestHost.equals(host)) {
-                throw HttpTeleException.of("CSRF Blocked: Origin host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
+                throw HttpTeleError.of("CSRF Blocked: Origin host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
             }
         } else {
             String refererHeader = request.headers().get(REFERER_HEADER);
             if (refererHeader != null) {
                 String host = hostFromUrl(refererHeader);
                 if (!requestHost.equals(host)) {
-                    throw HttpTeleException.of("CSRF Blocked: Referer host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
+                    throw HttpTeleError.of("CSRF Blocked: Referer host mismatch. Expected: " + requestHost + ", Got: " + host, 403);
                 }
             } else {
                 // If both headers are missing on an unsafe method, it indicates a direct security violation or a legacy bot.
-                throw HttpTeleException.of("CSRF Blocked: Both Origin and Referer headers are missing for an unsafe state-changing request.", 403);
+                throw HttpTeleError.of("CSRF Blocked: Both Origin and Referer headers are missing for an unsafe state-changing request.", 403);
             }
         }
     }
@@ -108,7 +108,7 @@ public class CSRFProtector {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            throw HttpTeleException.of("Invalid url structure: " + url, 500);
+            throw HttpTeleError.of("Invalid url structure: " + url, 500);
         }
         return uri.getHost();
     }

@@ -6,7 +6,8 @@ import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
-import colesico.framework.telehttp.HttpTeleException;
+import colesico.framework.telehttp.ContentType;
+import colesico.framework.telehttp.HttpTeleError;
 import colesico.framework.telehttp.response.ExceptionResponse;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -24,11 +25,22 @@ public class JsonExceptionResponseWriter
     }
 
     @Override
-    protected String errorDetails(Exception exception) {
+    protected Integer statusCode(ExceptionResponse response, RestletWriteOptions options, Integer defaultValue) {
+        return super.statusCode(response, options, defaultValue);
+    }
+
+    @Override
+    protected ContentType contentType(ExceptionResponse response, RestletWriteOptions options, ContentType defaultValue) {
+        return super.contentType(response, options, defaultValue);
+    }
+
+    @Override
+    protected String errorData(ExceptionResponse response) {
+        var exception = response.value();
         return switch (exception) {
             case UnauthenticatedException e -> "Unauthenticated";
             case UnauthorizedException e -> "Unauthorized";
-            case HttpTeleException e -> {
+            case HttpTeleError e -> {
                 if (e.details() != null) {
                     yield serializer.serialize(e.details(), e.details().getClass());
                 }

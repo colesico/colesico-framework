@@ -21,6 +21,9 @@ package colesico.framework.teleapi;
  */
 public class TeleException extends RuntimeException {
 
+    public TeleException() {
+    }
+
     public TeleException(String message) {
         super(message);
     }

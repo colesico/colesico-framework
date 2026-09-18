@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ExceptionResponse extends ValueResponse<Exception> {
+
     protected ExceptionResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, Exception value) {
         super(statusCode, contentType, headers, cookies, value);
     }
