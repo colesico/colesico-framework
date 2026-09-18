@@ -66,8 +66,8 @@ public class PebbleTemplater extends ViewWriter {
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.TEXT_HTML;
+    protected ContentType contentType(ViewResponse response, WebletWriteOptions options, ContentType defaultValue) {
+        return super.contentType(response, options, ContentType.TEXT_HTML);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class PebbleTemplater extends ViewWriter {
             context.put(MODEL_VAR, response.model());
         }
 
-        Charset charset = contentType(response, options).charset().orElse(StandardCharsets.UTF_8);
+        Charset charset = contentType(response, options, null).charset().orElse(StandardCharsets.UTF_8);
 
         PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.view());
 

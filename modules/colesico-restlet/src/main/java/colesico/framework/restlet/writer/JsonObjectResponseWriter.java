@@ -33,13 +33,13 @@ public class JsonObjectResponseWriter
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.APPLICATION_JSON;
+    protected ContentType contentType(ObjectResponse response, RestletWriteOptions options, ContentType defaultValue) {
+        return super.contentType(response, options, ContentType.APPLICATION_JSON);
     }
 
     @Override
     protected void write(OutputStream outputStream, ObjectResponse response, RestletWriteOptions options) throws IOException {
-        var contentType = contentType(response, options);
+        var contentType = contentType(response, options, null);
         serializer.serialize(response.value(),
                 options.baseType(),
                 contentType.charset().orElse(StandardCharsets.UTF_8),
