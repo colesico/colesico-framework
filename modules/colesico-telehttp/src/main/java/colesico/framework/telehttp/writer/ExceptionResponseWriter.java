@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Default exception response writer
+ *
  * @param <O>
  */
 public class ExceptionResponseWriter<O extends HttpWriteOptions>
@@ -25,28 +26,21 @@ public class ExceptionResponseWriter<O extends HttpWriteOptions>
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.TEXT_PLAIN;
-    }
-
-    @Override
-    protected Integer defaultStatusCode() {
-        return 500;
-    }
-
-    @Override
-    protected Integer emptyStatusCode() {
-        return 500;
-    }
-
-    @Override
-    protected Integer statusCode(ExceptionResponse response, O options) {
+    protected Integer statusCode(ExceptionResponse response, O options, Integer defaultValue) {
+        if (response.statusCode() != null) {
+            return response.statusCode();
+        }
         return switch (response.value()) {
             case UnauthenticatedException e -> 401;
             case UnauthorizedException e -> 401;
             case HttpTeleException e -> e.statusCode() != null ? e.statusCode() : 500;
-            default -> super.statusCode(response, options);
+            default -> options.statusCode() != null ? options.statusCode() : 500;
         };
+    }
+
+    @Override
+    protected Integer emptyStatusCode(ExceptionResponse response, O options) {
+        return 500;
     }
 
     protected String errorDetails(Exception exception) {
@@ -60,7 +54,7 @@ public class ExceptionResponseWriter<O extends HttpWriteOptions>
 
     @Override
     protected void write(OutputStream outputStream, ExceptionResponse response, O options) throws IOException {
-        var contentType = contentType(response, options);
+        var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         outputStream.write(errorDetails(response.value()).getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
     }
 }

@@ -22,40 +22,35 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         this.httpResponse = httpResponse;
     }
 
-    abstract protected ContentType defaultContentType();
-
     /**
      * Implement this method to write to response output stream
+     *
      * @param outputStream do not close after write
      */
     abstract protected void write(OutputStream outputStream, V response, O options) throws IOException;
 
-    protected Integer defaultStatusCode() {
-        return 200;
-    }
-
-    protected Integer emptyStatusCode() {
-        return 204;
-    }
-
-    protected Integer statusCode(V response, O options) {
+    protected Integer statusCode(V response, O options, Integer defaultValue) {
         if (response.statusCode() != null) {
             return response.statusCode();
         }
         if (options.statusCode() != null) {
             return options.statusCode();
         }
-        return defaultStatusCode();
+        return defaultValue;
     }
 
-    protected ContentType contentType(V response, O options) {
+    protected Integer emptyStatusCode(V response, O options) {
+        return 204;
+    }
+
+    protected ContentType contentType(V response, O options, ContentType defaultValue) {
         if (response.contentType() != null) {
             return response.contentType();
         }
         if (options.contentType() != null) {
             return options.contentType();
         }
-        return defaultContentType();
+        return defaultValue;
     }
 
     protected boolean isEmptyResponse(V response) {
@@ -72,18 +67,18 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         }
 
         if (isEmptyResponse(response)) {
-            httpResponse.setStatus(emptyStatusCode()).close();
+            httpResponse.setStatus(emptyStatusCode(response, options)).close();
             return;
         }
 
-        var statusCode = statusCode(response, options);
+        var statusCode = statusCode(response, options, 200);
         if (statusCode == null) {
             throw HttpTeleException.of("Undefined http status code", 500);
         }
 
-        var contentType = contentType(response, options);
+        var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         if (contentType == null) {
-            throw HttpTeleException.of("Undefined media type", 500);
+            throw HttpTeleException.of("Undefined content type", 500);
         }
 
         httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());

@@ -17,13 +17,8 @@ public class StringResponseWriter<V extends StringResponse, O extends HttpWriteO
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.TEXT_PLAIN;
-    }
-
-    @Override
     protected void write(OutputStream outputStream, V response, O options) throws IOException {
-        var contentType = contentType(response, options);
+        var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         outputStream.write(response.value().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
     }
 }

@@ -20,13 +20,8 @@ public class ToStringObjectResponseWriter<V extends ObjectResponse, O extends Ht
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.TEXT_PLAIN;
-    }
-
-    @Override
     protected void write(OutputStream outputStream, V response, O options) throws IOException {
-        var contentType = contentType(response, options);
+        var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         if (response.value() != null) {
             outputStream.write(response.value().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
         }

@@ -11,7 +11,6 @@ import colesico.framework.ioc.production.Producer;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(RedirectWriter.class)
 @Produce(NavigationResponseWriter.class)
 @Produce(ExceptionResponseWriter.class)
 @Produce(ToStringObjectResponseWriter.class)

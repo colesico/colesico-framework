@@ -16,8 +16,8 @@ public class BytesResponseWriter<V extends BytesResponse, O extends HttpWriteOpt
     }
 
     @Override
-    protected ContentType defaultContentType() {
-        return ContentType.APPLICATION_OCTET_STREAM;
+    protected ContentType contentType(V response, O options, ContentType defaultValue) {
+        return super.contentType(response, options, ContentType.APPLICATION_OCTET_STREAM);
     }
 
     @Override

@@ -55,10 +55,6 @@ abstract public class HttpDataPort<R extends HttpReadOptions, W extends HttpWrit
             writer = teleFactory.findWriter(options.baseType(), writerBaseClass(), HttpWriter.class);
         }
 
-        if (writer == null && value instanceof HttpTeleException) {
-            writer = teleFactory.provideWriter(HttpTeleException.class, writerBaseClass(), HttpWriter.class);
-        }
-
         if (writer == null && value instanceof Exception) {
             writer = teleFactory.provideWriter(Exception.class, writerBaseClass(), HttpWriter.class);
         }
