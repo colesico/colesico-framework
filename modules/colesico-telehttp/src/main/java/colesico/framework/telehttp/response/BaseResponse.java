@@ -11,9 +11,9 @@ import java.util.*;
 abstract public class BaseResponse implements HttpTeleResponse {
 
     /**
-     * Http status code
+     * Http status status
      */
-    protected final Integer statusCode;
+    protected final Integer status;
 
     /**
      * Content-type
@@ -24,8 +24,8 @@ abstract public class BaseResponse implements HttpTeleResponse {
 
     protected final Set<HttpCookie> cookies;
 
-    public BaseResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies) {
-        this.statusCode = statusCode;
+    public BaseResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies) {
+        this.status = status;
         this.contentType = contentType;
         this.headers = headers;
         this.cookies = cookies;
@@ -43,7 +43,7 @@ abstract public class BaseResponse implements HttpTeleResponse {
     }
 
     public Integer statusCode() {
-        return statusCode;
+        return status;
     }
 
     public ContentType contentType() {

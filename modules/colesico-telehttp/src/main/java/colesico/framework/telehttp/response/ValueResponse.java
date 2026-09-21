@@ -14,8 +14,8 @@ abstract public class ValueResponse<V> extends BaseResponse {
 
     protected final V value;
 
-    public ValueResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
-        super(statusCode, contentType, headers, cookies);
+    public ValueResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
+        super(status, contentType, headers, cookies);
         this.value = value;
     }
 
@@ -26,7 +26,7 @@ abstract public class ValueResponse<V> extends BaseResponse {
     @Override
     public String toString() {
         return "ValueResponse{" +
-                "statusCode=" + statusCode +
+                "statusCode=" + status +
                 ", value=" + value +
                 '}';
     }

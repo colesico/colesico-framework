@@ -16,8 +16,8 @@ public interface TeleError {
      * error codes, field validation messages, or localized descriptions)
      * that is safe and ready to be serialized and sent across the network.</p>
      *
-     * @return a serializable {@link Object} containing specific error details,
-     *         or {@code null} if no additional details are available
+     * @return a serializable {@link Object} containing specific error data,
+     *         or {@code null} if no additional data are available
      */
-    Object errorDetails();
+    Object errorData();
 }

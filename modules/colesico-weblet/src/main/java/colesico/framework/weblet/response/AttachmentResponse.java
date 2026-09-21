@@ -34,8 +34,8 @@ public final class AttachmentResponse extends BytesResponse {
 
     public static final String CONTENT_DISPOSITION_HEADER = "content-disposition";
 
-    private AttachmentResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
-        super(statusCode, contentType, headers, cookies, value);
+    private AttachmentResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
+        super(status, contentType, headers, cookies, value);
     }
 
     public static AttachmentResponse.Builder attachment(byte[] value, String fileName) {

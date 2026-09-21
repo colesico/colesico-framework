@@ -7,7 +7,7 @@ import java.lang.reflect.Type;
 
 public record RestletWriteOptions(
         Type baseType,
-        Integer statusCode,
+        Integer status,
         ContentType contentType,
         Class<? extends RestletWriter<?>> customWriter,
         Object metadata
@@ -20,7 +20,7 @@ public record RestletWriteOptions(
     @Deprecated
     public RestletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends RestletWriter<?>> customWriter, Object metadata) {
         this.baseType = baseType;
-        this.statusCode = statusCode;
+        this.status = statusCode;
         this.contentType = contentType;
         this.customWriter = customWriter;
         this.metadata = metadata;

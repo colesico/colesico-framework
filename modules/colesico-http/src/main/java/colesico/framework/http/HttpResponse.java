@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public interface HttpResponse {
 
-    HttpResponse setStatus(Integer code);
+    HttpResponse setStatus(Integer status);
 
     Integer getStatus();
 

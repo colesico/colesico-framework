@@ -2,10 +2,7 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
-import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.HttpWriter;
-import colesico.framework.telehttp.HttpTeleError;
-import colesico.framework.telehttp.HttpWriteOptions;
+import colesico.framework.telehttp.*;
 import colesico.framework.telehttp.response.BaseResponse;
 import jakarta.inject.Provider;
 
@@ -33,8 +30,8 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         if (response.statusCode() != null) {
             return response.statusCode();
         }
-        if (options.statusCode() != null) {
-            return options.statusCode();
+        if (options.status() != null) {
+            return options.status();
         }
         return defaultValue;
     }
@@ -63,7 +60,7 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         var httpResponse = this.httpResponse.get();
 
         if (httpResponse.isCommitted()) {
-            throw HttpTeleError.of("HTTP Response is committed while writing response", 500, response);
+            throw new HttpTeleException("HTTP Response is committed while writing response");
         }
 
         if (isEmptyResponse(response)) {
@@ -73,12 +70,12 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
 
         var statusCode = statusCode(response, options, 200);
         if (statusCode == null) {
-            throw HttpTeleError.of("Undefined http status code", 500);
+            throw new HttpTeleException("Undefined http status code");
         }
 
         var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
         if (contentType == null) {
-            throw HttpTeleError.of("Undefined content type", 500);
+            throw new HttpTeleException("Undefined content type");
         }
 
         httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());
@@ -100,7 +97,7 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
             // Do not close outputStream here, will be closed in http server handler
             outputStream.flush();
         } catch (Exception e) {
-            throw HttpTeleError.of(e, 500);
+            throw new HttpTeleException(e);
         }
     }
 

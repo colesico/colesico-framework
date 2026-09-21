@@ -13,7 +13,8 @@ import java.nio.charset.StandardCharsets;
 /**
  * Object response writer based on {@link String#toString()} serialization
  */
-public class ToStringObjectResponseWriter<V extends ObjectResponse, O extends HttpWriteOptions> extends ValueResponseWriter<V, O> {
+public class ToStringObjectResponseWriter<V extends ObjectResponse, O extends HttpWriteOptions>
+        extends ValueResponseWriter<V, O> {
 
     public ToStringObjectResponseWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);

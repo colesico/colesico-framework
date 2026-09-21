@@ -30,7 +30,7 @@ import java.lang.reflect.Type;
  */
 public record WebletWriteOptions(
         Type baseType,
-        Integer statusCode,
+        Integer status,
         ContentType contentType,
         Class<? extends HttpWriter<?, ?>> customWriter,
         Object metadata
@@ -43,7 +43,7 @@ public record WebletWriteOptions(
     @Deprecated
     public WebletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends HttpWriter<?, ?>> customWriter, Object metadata) {
         this.baseType = baseType;
-        this.statusCode = statusCode;
+        this.status = statusCode;
         this.contentType = contentType;
         this.customWriter = customWriter;
         this.metadata = metadata;

@@ -16,8 +16,8 @@ public final class ViewResponse extends BaseResponse {
     private final String view;
     private final Object model;
 
-    public ViewResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String view, Object model) {
-        super(statusCode, contentType, headers, cookies);
+    public ViewResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String view, Object model) {
+        super(status, contentType, headers, cookies);
         this.view = view;
         this.model = model;
     }

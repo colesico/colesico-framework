@@ -10,7 +10,7 @@ public interface HttpWriteOptions extends WriteOptions {
     /**
      * Default HTTP Status Code
      */
-    Integer statusCode();
+    Integer status();
 
     /**
      * Default content-type

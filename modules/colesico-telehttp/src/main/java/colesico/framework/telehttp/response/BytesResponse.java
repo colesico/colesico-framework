@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class BytesResponse extends ValueResponse<byte[]> {
 
-    protected BytesResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
-        super(statusCode, contentType, headers, cookies, value);
+    protected BytesResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
+        super(status, contentType, headers, cookies, value);
     }
 
     public static BytesResponse.Builder value(byte[] value) {

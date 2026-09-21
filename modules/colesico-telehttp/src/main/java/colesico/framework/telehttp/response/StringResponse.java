@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class StringResponse extends ValueResponse<String> {
 
-    protected StringResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
-        super(statusCode, contentType, headers, cookies, value);
+    protected StringResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
+        super(status, contentType, headers, cookies, value);
     }
 
     /**

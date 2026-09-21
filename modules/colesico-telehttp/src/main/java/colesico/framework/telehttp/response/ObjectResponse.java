@@ -9,8 +9,8 @@ import java.util.Set;
 
 public class ObjectResponse extends ValueResponse<Object> {
 
-    protected ObjectResponse(Integer statusCode, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, Object value) {
-        super(statusCode, contentType, headers, cookies, value);
+    protected ObjectResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, Object value) {
+        super(status, contentType, headers, cookies, value);
     }
 
     public static Builder value(Object value) {

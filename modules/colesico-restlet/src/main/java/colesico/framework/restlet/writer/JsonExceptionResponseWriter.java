@@ -8,13 +8,12 @@ import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpTeleError;
-import colesico.framework.telehttp.response.ExceptionResponse;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
 @Singleton
 public class JsonExceptionResponseWriter
-        extends colesico.framework.telehttp.writer.ExceptionResponseWriter<RestletWriteOptions>
+        extends colesico.framework.telehttp.writer.ValueResponseWriter<ExceptionResponse, RestletWriteOptions>
         implements RestletWriter<ExceptionResponse> {
 
     private final JsonSerializer serializer;

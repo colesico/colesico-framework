@@ -8,7 +8,7 @@ import colesico.framework.teleapi.TeleError;
  *
  * <p>This interface provides a unified contract for HTTP-specific error responses,
  * combining an HTTP status code and a serializable
- * details payload.</p>
+ * error data payload.</p>
  */
 public interface HttpTeleError extends TeleError {
 
@@ -21,5 +21,5 @@ public interface HttpTeleError extends TeleError {
      *
      * @return the HTTP status code as an {@link Integer}
      */
-    Integer statusCode();
+    Integer status();
 }

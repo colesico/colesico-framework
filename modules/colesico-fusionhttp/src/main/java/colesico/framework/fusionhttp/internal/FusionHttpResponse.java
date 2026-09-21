@@ -20,8 +20,8 @@ public class FusionHttpResponse implements HttpResponse {
     }
 
     @Override
-    public HttpResponse setStatus(Integer code) {
-        response.setStatus(code);
+    public HttpResponse setStatus(Integer status) {
+        response.setStatus(status);
         return this;
     }
 
