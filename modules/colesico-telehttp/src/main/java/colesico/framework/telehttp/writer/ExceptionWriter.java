@@ -19,7 +19,7 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         this.httpResponse = httpResponse;
     }
 
-    protected Integer statusCode(Exception exception, HttpWriteOptions options, Integer defaultValue) {
+    protected Integer errorStatus(Exception exception, HttpWriteOptions options) {
 
         if (exception instanceof HttpTeleError hte) {
             if (hte.status() != null) {
@@ -65,7 +65,8 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
             return;
         }
 
-        httpResponse.setStatus()
+        httpResponse.setStatus(errorStatus(exception, options))
+                .send(errorData(exception));
 
     }
 

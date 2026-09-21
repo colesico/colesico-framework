@@ -66,7 +66,7 @@ public class PebbleTemplater extends ViewWriter {
     }
 
     @Override
-    protected ContentType contentType(ViewResponse response, WebletWriteOptions options, ContentType defaultValue) {
+    protected ContentType contentType(ViewResponse response, WebletWriteOptions options, ContentType defaultContentType) {
         return super.contentType(response, options, ContentType.TEXT_HTML);
     }
 

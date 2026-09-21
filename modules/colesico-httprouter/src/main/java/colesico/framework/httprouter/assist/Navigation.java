@@ -43,7 +43,7 @@ public class Navigation {
     protected HttpMethod httpMethod = HttpMethod.HTTP_METHOD_GET;
     protected String uri;
 
-    protected int statusCode = 302;
+    protected int status = 302;
 
     protected final Map<String, String> queryParameters = new HashMap<>();
     protected final Map<String, String> routeParameters = new HashMap<>();
@@ -111,11 +111,11 @@ public class Navigation {
     }
 
     /**
-     * Set custom http redirect status code.
+     * Set custom http redirect status.
      * Default code 302
      */
-    public Navigation statusCode(int code) {
-        this.statusCode = code;
+    public Navigation status(int code) {
+        this.status = code;
         return this;
     }
 
@@ -188,7 +188,7 @@ public class Navigation {
         HttpResponse response = context.response();
         HttpUtils.setHeaders(response, headers);
         HttpUtils.setCookies(response, cookies);
-        response.setStatus(statusCode).addHeader("Location", location).close();
+        response.setStatus(status).addHeader("Location", location).close();
     }
 
     /**

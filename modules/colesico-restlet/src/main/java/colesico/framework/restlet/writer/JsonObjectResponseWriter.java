@@ -33,7 +33,7 @@ public class JsonObjectResponseWriter
     }
 
     @Override
-    protected ContentType contentType(ObjectResponse response, RestletWriteOptions options, ContentType defaultValue) {
+    protected ContentType contentType(ObjectResponse response, RestletWriteOptions options, ContentType defaultContentType) {
         return super.contentType(response, options, ContentType.APPLICATION_JSON);
     }
 

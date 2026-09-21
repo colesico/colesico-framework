@@ -11,7 +11,7 @@ import java.util.*;
 abstract public class BaseResponse implements HttpTeleResponse {
 
     /**
-     * Http status status
+     * Http status
      */
     protected final Integer status;
 
@@ -42,7 +42,7 @@ abstract public class BaseResponse implements HttpTeleResponse {
         return this;
     }
 
-    public Integer statusCode() {
+    public Integer status() {
         return status;
     }
 
@@ -68,8 +68,8 @@ abstract public class BaseResponse implements HttpTeleResponse {
 
         abstract protected B self();
 
-        public B statusCode(Integer statusCode) {
-            this.statusCode = statusCode;
+        public B status(Integer status) {
+            this.statusCode = status;
             return self();
         }
 

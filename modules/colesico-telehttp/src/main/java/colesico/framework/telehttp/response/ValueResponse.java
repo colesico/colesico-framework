@@ -26,7 +26,7 @@ abstract public class ValueResponse<V> extends BaseResponse {
     @Override
     public String toString() {
         return "ValueResponse{" +
-                "statusCode=" + status +
+                "status=" + status +
                 ", value=" + value +
                 '}';
     }

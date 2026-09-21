@@ -26,28 +26,31 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
      */
     abstract protected void write(OutputStream outputStream, V response, O options) throws IOException;
 
-    protected Integer statusCode(V response, O options, Integer defaultValue) {
-        if (response.statusCode() != null) {
-            return response.statusCode();
+    /**
+     *  Calculate result http status
+     */
+    protected Integer status(V response, O options, Integer defaultStatus) {
+        if (response.status() != null) {
+            return response.status();
         }
         if (options.status() != null) {
             return options.status();
         }
-        return defaultValue;
+        return defaultStatus;
     }
 
-    protected Integer emptyStatusCode(V response, O options) {
+    protected Integer emptyStatus(V response, O options) {
         return 204;
     }
 
-    protected ContentType contentType(V response, O options, ContentType defaultValue) {
+    protected ContentType contentType(V response, O options, ContentType defaultContentType) {
         if (response.contentType() != null) {
             return response.contentType();
         }
         if (options.contentType() != null) {
             return options.contentType();
         }
-        return defaultValue;
+        return defaultContentType;
     }
 
     protected boolean isEmptyResponse(V response) {
@@ -64,13 +67,13 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
         }
 
         if (isEmptyResponse(response)) {
-            httpResponse.setStatus(emptyStatusCode(response, options)).close();
+            httpResponse.setStatus(emptyStatus(response, options)).close();
             return;
         }
 
-        var statusCode = statusCode(response, options, 200);
-        if (statusCode == null) {
-            throw new HttpTeleException("Undefined http status code");
+        var status = status(response, options, 200);
+        if (status == null) {
+            throw new HttpTeleException("Undefined http status");
         }
 
         var contentType = contentType(response, options, ContentType.TEXT_PLAIN);
@@ -78,7 +81,7 @@ abstract public class BaseResponseWriter<V extends BaseResponse, O extends HttpW
             throw new HttpTeleException("Undefined content type");
         }
 
-        httpResponse.setStatus(statusCode).setContentType(contentType.headerValue());
+        httpResponse.setStatus(status).setContentType(contentType.headerValue());
 
         if (!response.headers().isEmpty()) {
             HttpUtils.setHeaders(httpResponse, response.headers());

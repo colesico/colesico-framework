@@ -24,8 +24,8 @@ public class JsonExceptionResponseWriter
     }
 
     @Override
-    protected Integer statusCode(ExceptionResponse response, RestletWriteOptions options, Integer defaultValue) {
-        return super.statusCode(response, options, defaultValue);
+    protected Integer status(ExceptionResponse response, RestletWriteOptions options, Integer defaultStatus) {
+        return super.status(response, options, defaultStatus);
     }
 
     @Override
