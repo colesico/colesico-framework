@@ -7,34 +7,27 @@ import colesico.framework.telehttp.*;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 /**
  * Default exception writer
  */
 @Singleton
-public class ExceptionWriter<O extends HttpWriteOptions> implements HttpWriter<Exception, O> {
-
-    protected Provider<HttpResponse> httpResponse;
+public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
+        extends AbstractHttpWriter<E, O> {
 
     public ExceptionWriter(Provider<HttpResponse> httpResponse) {
-        this.httpResponse = httpResponse;
+        super(httpResponse);
     }
 
-    protected Integer status(Exception exception, O options, Integer defaultStatus) {
-
-        if (exception instanceof HttpTeleError hte) {
-            if (hte.status() != null) {
-                return hte.status();
-            }
-        }
-
-        if (options.status() != null) {
-            return options.status();
-        }
-
-        return defaultStatus;
+      @Override
+    protected Integer status(E exception, O options, Integer defaultStatus) {
+        return super.status(exception, options, 500);
     }
 
-    protected String errorData(Exception exception, O options) {
+
+    protected String errorData(E exception, O options) {
 
         String data = "Exception: " + exception.getClass().getCanonicalName();
         if (!StringUtils.isBlank(exception.getMessage())) {
@@ -50,26 +43,13 @@ public class ExceptionWriter<O extends HttpWriteOptions> implements HttpWriter<E
         return data;
     }
 
-    protected ContentType contentType(Exception exception, O options, ContentType defaultContentType){
+    @Override
+    protected ContentType contentType(E exception, O options, ContentType defaultContentType) {
         return ContentType.TEXT_PLAIN;
     }
 
     @Override
-    public void write(Exception exception, O options) {
-        var httpResponse = this.httpResponse.get();
-
-        if (httpResponse.isCommitted()) {
-            throw new HttpTeleException("HTTP Response is committed while writing response");
-        }
-
-        if (exception == null) {
-            httpResponse.setStatus(500).close();
-            return;
-        }
-
-        httpResponse.setStatus(status(exception, options, 500))
-                .setContentType(contentType(exception,options,ContentType.TEXT_PLAIN).mimeType())
-                .send(errorData(exception, options));
+    protected void write(OutputStream outputStream, E exception, O options) throws IOException {
 
     }
 

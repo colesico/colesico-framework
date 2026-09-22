@@ -16,7 +16,7 @@
 
 package colesico.framework.example.weblet;
 
-import colesico.framework.telehttp.response.StringResponse;
+import colesico.framework.telehttp.result.StringResult;
 import colesico.framework.weblet.Weblet;
 
 @Weblet
@@ -31,8 +31,8 @@ public class HelloWeblet {
     }
 
     // Browse: http://localhost:8080/hello-weblet/privet?name=Татьяна
-    public StringResponse privet(String name) {
-        return StringResponse.html(SAY_PRIVET_TEXT + name).build();
+    public StringResult privet(String name) {
+        return StringResult.html(SAY_PRIVET_TEXT + name).build();
     }
 
 }

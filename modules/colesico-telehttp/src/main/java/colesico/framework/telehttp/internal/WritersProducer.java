@@ -4,17 +4,17 @@ import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.profile.Profile;
 import colesico.framework.telehttp.HttpWriter;
-import colesico.framework.telehttp.response.*;
+import colesico.framework.telehttp.result.*;
 import colesico.framework.telehttp.writer.*;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(NavigationResponseWriter.class)
+@Produce(NavigationResultWriter.class)
 @Produce(ExceptionResponseWriter.class)
-@Produce(ToStringObjectResponseWriter.class)
-@Produce(StringResponseWriter.class)
+@Produce(ToStringObjectResultWriter.class)
+@Produce(StringResultWriter.class)
 @Produce(BytesResponseWriter.class)
 @Produce(ToStringObjectWriter.class)
 @Produce(ExceptionWriter.class)
@@ -22,8 +22,8 @@ import jakarta.inject.Singleton;
 public class WritersProducer {
 
     @Singleton
-    @Classed(ObjectResponse.class)
-    public HttpWriter objectResponseWriter(ToStringObjectResponseWriter imp) {
+    @Classed(ObjectResult.class)
+    public HttpWriter objectResponseWriter(ToStringObjectResultWriter imp) {
         return imp;
     }
 
@@ -34,19 +34,19 @@ public class WritersProducer {
     }
 
     @Singleton
-    @Classed(NavigationResponse.class)
-    public HttpWriter navigationResponseWriter(NavigationResponseWriter impl) {
+    @Classed(NavigationResult.class)
+    public HttpWriter navigationResponseWriter(NavigationResultWriter impl) {
         return impl;
     }
 
     @Singleton
-    @Classed(StringResponse.class)
-    public HttpWriter stringResponseWriter(StringResponseWriter imp) {
+    @Classed(StringResult.class)
+    public HttpWriter stringResponseWriter(StringResultWriter imp) {
         return imp;
     }
 
     @Singleton
-    @Classed(BytesResponse.class)
+    @Classed(BytesResult.class)
     public HttpWriter bytesResponseWriter(BytesResponseWriter imp) {
         return imp;
     }

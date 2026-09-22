@@ -2,7 +2,7 @@ package colesico.framework.weblet.response;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.response.BaseResponse;
+import colesico.framework.telehttp.result.AbstractHttpResult;
 
 import java.util.List;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Set;
 /**
  * Returns  model that be presented to given view
  */
-public final class ViewResponse extends BaseResponse {
+public final class ViewResponse extends AbstractHttpResult {
 
     private final String view;
     private final Object model;
@@ -34,7 +34,7 @@ public final class ViewResponse extends BaseResponse {
         return new ViewResponse.Builder(view);
     }
 
-    public static class Builder extends BaseResponse.Builder<ViewResponse, ViewResponse.Builder> {
+    public static class Builder extends AbstractHttpResult.Builder<ViewResponse, ViewResponse.Builder> {
 
         protected final String viewName;
         protected Object model;

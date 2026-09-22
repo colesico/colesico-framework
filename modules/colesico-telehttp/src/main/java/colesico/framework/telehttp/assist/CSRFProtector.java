@@ -17,8 +17,7 @@
 package colesico.framework.telehttp.assist;
 
 import colesico.framework.http.*;
-import colesico.framework.telehttp.HttpTeleError;
-import colesico.framework.telehttp.response.BaseResponse;
+import colesico.framework.telehttp.result.AbstractHttpResult;
 
 import jakarta.inject.Singleton;
 
@@ -90,7 +89,7 @@ public class CSRFProtector {
      * Appends essential security headers to the response builder.
      * Ensures that the browser retains the Origin header while protecting user privacy during cross-origin navigation.
      */
-    public BaseResponse.Builder addMetadata(BaseResponse.Builder responseBuilder) {
+    public AbstractHttpResult.Builder addMetadata(AbstractHttpResult.Builder responseBuilder) {
         responseBuilder
                 .header(REFERER_POLICY_HEADER, REFERER_POLICY_HEADER_VALUE);
         return responseBuilder;

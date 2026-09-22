@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package colesico.framework.telehttp.response;
+package colesico.framework.telehttp.result;
 
 
 import colesico.framework.httprouter.assist.Navigation;
 
 /**
- * To perform {@link colesico.framework.httprouter.Router} navigation
+ * {@link Navigation} wrapper
+ * to perform {@link colesico.framework.httprouter.Router} navigation
  */
-public record NavigationResponse(Navigation navigation) implements HttpTeleResponse {
+public record NavigationResult(Navigation navigation) implements TeleResult {
 
-    public static NavigationResponse of() {
-        return new NavigationResponse(Navigation.of());
+    public static NavigationResult of() {
+        return new NavigationResult(Navigation.of());
     }
 
-    public static NavigationResponse of(String uri) {
-        return new NavigationResponse(Navigation.of(uri));
+    public static NavigationResult of(String uri) {
+        return new NavigationResult(Navigation.of(uri));
     }
 
-    public static NavigationResponse of(Class<?> serviceClass, String serviceMethod) {
-        return new NavigationResponse(Navigation.of(serviceClass, serviceMethod));
+    public static NavigationResult of(Class<?> serviceClass, String serviceMethod) {
+        return new NavigationResult(Navigation.of(serviceClass, serviceMethod));
     }
 }

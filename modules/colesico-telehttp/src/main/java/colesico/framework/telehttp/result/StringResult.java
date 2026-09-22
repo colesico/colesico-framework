@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.response;
+package colesico.framework.telehttp.result;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class StringResponse extends ValueResponse<String> {
+public class StringResult extends AbstractValueResult<String> {
 
-    protected StringResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
+    protected StringResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
         super(status, contentType, headers, cookies, value);
     }
 
@@ -43,7 +43,7 @@ public class StringResponse extends ValueResponse<String> {
         return new Builder(null);
     }
 
-    public static class Builder extends ValueResponse.Builder<String, StringResponse, Builder> {
+    public static class Builder extends AbstractValueResult.Builder<String, StringResult, Builder> {
 
         public Builder(String value) {
             super(value);
@@ -55,8 +55,8 @@ public class StringResponse extends ValueResponse<String> {
         }
 
         @Override
-        public StringResponse build() {
-            return new StringResponse(status, contentType, headers, cookies, value);
+        public StringResult build() {
+            return new StringResult(status, contentType, headers, cookies, value);
         }
     }
 }

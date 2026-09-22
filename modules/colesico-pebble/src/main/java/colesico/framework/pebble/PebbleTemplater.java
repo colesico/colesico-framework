@@ -66,23 +66,23 @@ public class PebbleTemplater extends ViewWriter {
     }
 
     @Override
-    protected ContentType contentType(ViewResponse response, WebletWriteOptions options, ContentType defaultContentType) {
-        return super.contentType(response, options, ContentType.TEXT_HTML);
+    protected ContentType contentType(ViewResponse result, WebletWriteOptions options, ContentType defaultContentType) {
+        return super.contentType(result, options, ContentType.TEXT_HTML);
     }
 
     @Override
-    protected void write(OutputStream outputStream, ViewResponse response, WebletWriteOptions options) throws IOException {
+    protected void write(OutputStream outputStream, ViewResponse result, WebletWriteOptions options) throws IOException {
         Map<String, Object> context;
-        if (response.model() instanceof Map m) {
+        if (result.model() instanceof Map m) {
             context = m;
         } else {
             context = new HashMap<>();
-            context.put(MODEL_VAR, response.model());
+            context.put(MODEL_VAR, result.model());
         }
 
-        Charset charset = contentType(response, options, null).charset().orElse(StandardCharsets.UTF_8);
+        Charset charset = contentType(result, options, null).charset().orElse(StandardCharsets.UTF_8);
 
-        PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(response.view());
+        PebbleTemplate compiledTemplate = pebbleEngine.getTemplate(result.view());
 
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(outputStream, charset))) {
             compiledTemplate.evaluate(writer, context);

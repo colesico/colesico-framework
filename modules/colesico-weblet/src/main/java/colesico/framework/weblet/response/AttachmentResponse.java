@@ -18,8 +18,8 @@ package colesico.framework.weblet.response;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.response.BytesResponse;
-import colesico.framework.telehttp.response.ValueResponse;
+import colesico.framework.telehttp.result.BytesResult;
+import colesico.framework.telehttp.result.AbstractValueResult;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Simple data file response
  */
-public final class AttachmentResponse extends BytesResponse {
+public final class AttachmentResponse extends BytesResult {
 
     public static final String CONTENT_DISPOSITION_HEADER = "content-disposition";
 
@@ -42,7 +42,7 @@ public final class AttachmentResponse extends BytesResponse {
         return new AttachmentResponse.Builder(value, fileName);
     }
 
-    public static class Builder extends ValueResponse.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
+    public static class Builder extends AbstractValueResult.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
 
         private final String fileName;
 

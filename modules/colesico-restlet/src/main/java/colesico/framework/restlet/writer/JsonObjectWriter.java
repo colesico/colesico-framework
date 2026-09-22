@@ -2,7 +2,7 @@ package colesico.framework.restlet.writer;
 
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
-import colesico.framework.telehttp.response.ObjectResponse;
+import colesico.framework.telehttp.result.ObjectResult;
 import jakarta.inject.Singleton;
 
 /**
@@ -19,6 +19,6 @@ public class JsonObjectWriter implements RestletWriter<Object> {
 
     @Override
     public void write(Object value, RestletWriteOptions options) {
-        writer.write(ObjectResponse.value(value).build(), options);
+        writer.write(ObjectResult.value(value).build(), options);
     }
 }

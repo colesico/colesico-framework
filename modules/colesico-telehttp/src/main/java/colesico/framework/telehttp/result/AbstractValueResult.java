@@ -1,4 +1,4 @@
-package colesico.framework.telehttp.response;
+package colesico.framework.telehttp.result;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
@@ -10,11 +10,13 @@ import java.util.Set;
 /**
  * General response model with a value
  */
-abstract public class ValueResponse<V> extends BaseResponse {
+abstract public class AbstractValueResult<V>
+        extends AbstractHttpResult
+        implements ValueResult<V> {
 
     protected final V value;
 
-    public ValueResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
+    public AbstractValueResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
         super(status, contentType, headers, cookies);
         this.value = value;
     }
@@ -25,14 +27,14 @@ abstract public class ValueResponse<V> extends BaseResponse {
 
     @Override
     public String toString() {
-        return "ValueResponse{" +
+        return "ValueResult{" +
                 "status=" + status +
                 ", value=" + value +
                 '}';
     }
 
-    abstract public static class Builder<V, R extends ValueResponse<V>, B extends Builder<V, R, B>>
-            extends BaseResponse.Builder<R, B> {
+    abstract public static class Builder<V, R extends AbstractValueResult<V>, B extends Builder<V, R, B>>
+            extends AbstractHttpResult.Builder<R, B> {
 
         protected V value;
 

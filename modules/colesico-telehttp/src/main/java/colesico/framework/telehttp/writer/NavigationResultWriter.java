@@ -20,7 +20,7 @@ import colesico.framework.http.HttpContext;
 import colesico.framework.httprouter.Router;
 import colesico.framework.telehttp.HttpWriter;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.response.NavigationResponse;
+import colesico.framework.telehttp.result.NavigationResult;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
@@ -30,19 +30,19 @@ import jakarta.inject.Singleton;
  * Performs navigate operation
  */
 @Singleton
-public final class NavigationResponseWriter implements HttpWriter<NavigationResponse, HttpWriteOptions> {
+public final class NavigationResultWriter implements HttpWriter<NavigationResult, HttpWriteOptions> {
 
     private final Router router;
     private final Provider<HttpContext> httpContext;
 
     @Inject
-    public NavigationResponseWriter(Router router, Provider<HttpContext> httpContext) {
+    public NavigationResultWriter(Router router, Provider<HttpContext> httpContext) {
         this.router = router;
         this.httpContext = httpContext;
     }
 
     @Override
-    public void write(NavigationResponse value, HttpWriteOptions options) {
+    public void write(NavigationResult value, HttpWriteOptions options) {
         value.navigation().navigate(router, httpContext.get());
     }
 

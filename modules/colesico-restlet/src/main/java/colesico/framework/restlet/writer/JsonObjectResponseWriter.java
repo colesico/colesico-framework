@@ -5,8 +5,7 @@ import colesico.framework.restlet.JsonSerializer;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.response.ObjectResponse;
-import colesico.framework.telehttp.writer.ValueResponseWriter;
+import colesico.framework.telehttp.result.ObjectResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -21,8 +20,8 @@ import java.nio.charset.StandardCharsets;
  */
 @Singleton
 public class JsonObjectResponseWriter
-        extends ValueResponseWriter<ObjectResponse, RestletWriteOptions>
-        implements RestletWriter<ObjectResponse> {
+        extends ValueResultWriter<ObjectResult, RestletWriteOptions>
+        implements RestletWriter<ObjectResult> {
 
     protected final JsonSerializer serializer;
 
@@ -33,12 +32,12 @@ public class JsonObjectResponseWriter
     }
 
     @Override
-    protected ContentType contentType(ObjectResponse response, RestletWriteOptions options, ContentType defaultContentType) {
-        return super.contentType(response, options, ContentType.APPLICATION_JSON);
+    protected ContentType contentType(ObjectResult result, RestletWriteOptions options, ContentType defaultContentType) {
+        return super.contentType(result, options, ContentType.APPLICATION_JSON);
     }
 
     @Override
-    protected void write(OutputStream outputStream, ObjectResponse response, RestletWriteOptions options) throws IOException {
+    protected void write(OutputStream outputStream, ObjectResult response, RestletWriteOptions options) throws IOException {
         var contentType = contentType(response, options, null);
         serializer.serialize(response.value(),
                 options.baseType(),

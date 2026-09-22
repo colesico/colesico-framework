@@ -22,7 +22,7 @@ import colesico.framework.telehttp.assist.CSRFProtector;
 import colesico.framework.telehttp.origin.Origin;
 import colesico.framework.telehttp.ParamName;
 import colesico.framework.telehttp.ParamOrigin;
-import colesico.framework.telehttp.response.StringResponse;
+import colesico.framework.telehttp.result.StringResult;
 import colesico.framework.weblet.Weblet;
 
 import java.text.MessageFormat;
@@ -38,7 +38,7 @@ public class PostParams {
 
     // http://localhost:8080/post-params/form?action=default-action
     // http://localhost:8080/post-params/form?action=advanced-action?getparam=1
-    public StringResponse form(String action) {
+    public StringResult form(String action) {
         String formHtml = """
                 <form method='post'>
                     <input type='text' name='formval' value=''/>
@@ -46,7 +46,7 @@ public class PostParams {
                 </form>
                 """;
 
-        return StringResponse.html(String.format(formHtml, action)).build();
+        return StringResult.html(String.format(formHtml, action)).build();
     }
 
     // for http://localhost:8080/post-params/form?action=default-action

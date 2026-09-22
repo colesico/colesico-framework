@@ -7,7 +7,6 @@ import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.security.authentication.UnauthenticatedException;
 import colesico.framework.security.authorization.UnauthorizedException;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.HttpTeleError;
 import colesico.framework.telehttp.writer.ExceptionWriter;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
