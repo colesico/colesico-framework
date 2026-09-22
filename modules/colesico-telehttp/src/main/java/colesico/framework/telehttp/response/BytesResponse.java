@@ -30,7 +30,7 @@ public class BytesResponse extends ValueResponse<byte[]> {
 
         @Override
         public BytesResponse build() {
-            return new BytesResponse(statusCode, contentType, headers, cookies, value);
+            return new BytesResponse(status, contentType, headers, cookies, value);
         }
     }
 }

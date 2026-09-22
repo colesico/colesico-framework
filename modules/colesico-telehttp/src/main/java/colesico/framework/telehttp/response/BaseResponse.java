@@ -59,7 +59,7 @@ abstract public class BaseResponse implements HttpTeleResponse {
     }
 
     abstract public static class Builder<R extends BaseResponse, B extends Builder<R, B>> {
-        protected Integer statusCode;
+        protected Integer status;
         protected ContentType contentType;
         protected final Map<String, List<String>> headers = new HashMap<>();
         protected final Set<HttpCookie> cookies = new HashSet<>();
@@ -69,7 +69,7 @@ abstract public class BaseResponse implements HttpTeleResponse {
         abstract protected B self();
 
         public B status(Integer status) {
-            this.statusCode = status;
+            this.status = status;
             return self();
         }
 

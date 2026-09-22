@@ -111,7 +111,7 @@ public class Navigation {
     }
 
     /**
-     * Set custom http redirect status.
+     * Set custom http status.
      * Default code 302
      */
     public Navigation status(int code) {

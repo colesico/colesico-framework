@@ -19,7 +19,7 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         this.httpResponse = httpResponse;
     }
 
-    protected Integer errorStatus(Exception exception, HttpWriteOptions options) {
+    protected Integer status(Exception exception, HttpWriteOptions options) {
 
         if (exception instanceof HttpTeleError hte) {
             if (hte.status() != null) {
@@ -34,7 +34,7 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         return 500;
     }
 
-    protected String errorData(Exception exception) {
+    protected String data(Exception exception) {
 
         String data = "Exception: " + exception.getClass().getCanonicalName();
         if (!StringUtils.isBlank(exception.getMessage())) {
@@ -42,11 +42,9 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         }
 
         if (exception instanceof TeleError hte) {
-
             if (hte.errorData() != null) {
                 data = data + "; details: " + hte.errorData().toString();
             }
-
         }
 
         return data;
@@ -65,8 +63,8 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
             return;
         }
 
-        httpResponse.setStatus(errorStatus(exception, options))
-                .send(errorData(exception));
+        httpResponse.setStatus(status(exception, options))
+                .send(data(exception));
 
     }
 

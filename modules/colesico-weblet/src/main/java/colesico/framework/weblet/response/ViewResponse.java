@@ -55,7 +55,7 @@ public final class ViewResponse extends BaseResponse {
 
         @Override
         public ViewResponse build() {
-            return new ViewResponse(statusCode, contentType, headers, cookies, viewName, model);
+            return new ViewResponse(status, contentType, headers, cookies, viewName, model);
         }
     }
 }

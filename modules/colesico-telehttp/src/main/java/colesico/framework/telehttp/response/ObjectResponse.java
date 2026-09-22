@@ -30,7 +30,7 @@ public class ObjectResponse extends ValueResponse<Object> {
 
         @Override
         public ObjectResponse build() {
-            return new ObjectResponse(statusCode, contentType, headers, cookies, value);
+            return new ObjectResponse(status, contentType, headers, cookies, value);
         }
     }
 

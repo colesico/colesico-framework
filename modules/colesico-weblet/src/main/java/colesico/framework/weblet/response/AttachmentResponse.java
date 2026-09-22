@@ -62,7 +62,7 @@ public final class AttachmentResponse extends BytesResponse {
                 String headerValue = "attachment; filename*=UTF-8''" + encodeFileName(fileName);
                 header(CONTENT_DISPOSITION_HEADER, headerValue);
             }
-            return new AttachmentResponse(statusCode, contentType, headers, cookies, value);
+            return new AttachmentResponse(status, contentType, headers, cookies, value);
         }
 
         private String encodeFileName(String fileName) {

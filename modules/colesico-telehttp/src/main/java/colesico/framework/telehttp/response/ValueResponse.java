@@ -44,5 +44,6 @@ abstract public class ValueResponse<V> extends BaseResponse {
         public Builder(V value) {
             this.value = value;
         }
+
     }
 }

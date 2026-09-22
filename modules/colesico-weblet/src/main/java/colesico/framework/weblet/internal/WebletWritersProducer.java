@@ -19,10 +19,9 @@ package colesico.framework.weblet.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.telehttp.writer.BytesResponseWriter;
-import colesico.framework.telehttp.writer.StringResponseWriter;
 import colesico.framework.weblet.WebletWriter;
 import colesico.framework.weblet.response.AttachmentResponse;
-import colesico.framework.weblet.writer.WebletWriterProxy;
+import colesico.framework.weblet.writer.WebletProxyWriter;
 import jakarta.inject.Singleton;
 
 @Producer
@@ -31,6 +30,6 @@ public class WebletWritersProducer {
     @Singleton
     @Classed(AttachmentResponse.class)
     public WebletWriter binaryResponseWriter(BytesResponseWriter impl) {
-        return WebletWriterProxy.of(impl);
+        return WebletProxyWriter.of(impl);
     }
 }

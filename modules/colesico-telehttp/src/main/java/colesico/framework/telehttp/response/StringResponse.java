@@ -56,7 +56,7 @@ public class StringResponse extends ValueResponse<String> {
 
         @Override
         public StringResponse build() {
-            return new StringResponse(statusCode, contentType, headers, cookies, value);
+            return new StringResponse(status, contentType, headers, cookies, value);
         }
     }
 }
