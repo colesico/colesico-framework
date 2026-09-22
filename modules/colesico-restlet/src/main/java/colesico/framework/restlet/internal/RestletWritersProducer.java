@@ -26,7 +26,7 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(JsonObjectResponseWriter.class)
-@Produce(JsonExceptionResponseWriter.class)
+@Produce(JsonExceptionWriter.class)
 @Produce(JsonObjectWriter.class)
 public class RestletWritersProducer {
 
@@ -38,7 +38,7 @@ public class RestletWritersProducer {
 
     @Singleton
     @Classed(ExceptionResponse.class)
-    public RestletWriter exceptionResponseWriter(JsonExceptionResponseWriter impl) {
+    public RestletWriter exceptionResponseWriter(JsonExceptionWriter impl) {
         return impl;
     }
 

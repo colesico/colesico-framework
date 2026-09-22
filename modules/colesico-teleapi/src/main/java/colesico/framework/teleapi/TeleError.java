@@ -19,5 +19,5 @@ public interface TeleError {
      * @return a serializable {@link Object} containing specific error data,
      *         or {@code null} if no additional data are available
      */
-    Object errorData();
+    Object errorDetails();
 }

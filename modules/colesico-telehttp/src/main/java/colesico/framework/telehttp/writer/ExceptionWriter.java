@@ -11,7 +11,7 @@ import jakarta.inject.Singleton;
  * Default exception writer
  */
 @Singleton
-public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> {
+public class ExceptionWriter<O extends HttpWriteOptions> implements HttpWriter<Exception, O> {
 
     protected Provider<HttpResponse> httpResponse;
 
@@ -19,7 +19,7 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         this.httpResponse = httpResponse;
     }
 
-    protected Integer status(Exception exception, HttpWriteOptions options) {
+    protected Integer status(Exception exception, O options, Integer defaultStatus) {
 
         if (exception instanceof HttpTeleError hte) {
             if (hte.status() != null) {
@@ -31,10 +31,10 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
             return options.status();
         }
 
-        return 500;
+        return defaultStatus;
     }
 
-    protected String data(Exception exception) {
+    protected String errorData(Exception exception, O options) {
 
         String data = "Exception: " + exception.getClass().getCanonicalName();
         if (!StringUtils.isBlank(exception.getMessage())) {
@@ -42,16 +42,20 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
         }
 
         if (exception instanceof TeleError hte) {
-            if (hte.errorData() != null) {
-                data = data + "; details: " + hte.errorData().toString();
+            if (hte.errorDetails() != null) {
+                data = data + "; details: " + hte.errorDetails().toString();
             }
         }
 
         return data;
     }
 
+    protected ContentType contentType(Exception exception, O options, ContentType defaultContentType){
+        return ContentType.TEXT_PLAIN;
+    }
+
     @Override
-    public void write(Exception exception, HttpWriteOptions options) {
+    public void write(Exception exception, O options) {
         var httpResponse = this.httpResponse.get();
 
         if (httpResponse.isCommitted()) {
@@ -63,8 +67,9 @@ public class ExceptionWriter implements HttpWriter<Exception, HttpWriteOptions> 
             return;
         }
 
-        httpResponse.setStatus(status(exception, options))
-                .send(data(exception));
+        httpResponse.setStatus(status(exception, options, 500))
+                .setContentType(contentType(exception,options,ContentType.TEXT_PLAIN).mimeType())
+                .send(errorData(exception, options));
 
     }
 
