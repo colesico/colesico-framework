@@ -9,10 +9,10 @@ import jakarta.inject.Provider;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class BytesResponseWriter<V extends BytesResult, O extends HttpWriteOptions>
-        extends AbstractHttpWriter<V, O> {
+public class BytesResultWriter<V extends BytesResult, O extends HttpWriteOptions>
+        extends ValueResultWriter<V, O> {
 
-    public BytesResponseWriter(Provider<HttpResponse> httpResponse) {
+    public BytesResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 

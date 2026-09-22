@@ -2,8 +2,9 @@ package colesico.framework.telehttp.writer;
 
 import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
-import colesico.framework.teleapi.TeleError;
+import colesico.framework.teleapi.TeleProblem;
 import colesico.framework.telehttp.*;
+import colesico.framework.telehttp.result.ValueResult;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -15,7 +16,7 @@ import java.io.OutputStream;
  */
 @Singleton
 public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
-        extends AbstractHttpWriter<E, O> {
+        extends HttpResultWriter<E, O> {
 
     public ExceptionWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
@@ -26,6 +27,12 @@ public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
         return super.status(exception, options, 500);
     }
 
+    protected Integer emptyResult(E exception, Integer emptyStatus) {
+        if (result instanceof ValueResult<?> vr) {
+            return vr.value() == null ? emptyStatus : null;
+        }
+        return result == null ? emptyStatus : null;
+    }
 
     protected String errorData(E exception, O options) {
 
@@ -34,9 +41,9 @@ public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
             data = data + "; message: " + exception.getMessage();
         }
 
-        if (exception instanceof TeleError hte) {
-            if (hte.errorDetails() != null) {
-                data = data + "; details: " + hte.errorDetails().toString();
+        if (exception instanceof TeleProblem hte) {
+            if (hte.problemDetail() != null) {
+                data = data + "; details: " + hte.problemDetail().toString();
             }
         }
 

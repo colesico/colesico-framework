@@ -4,19 +4,19 @@ import colesico.framework.http.HttpResponse;
 import colesico.framework.http.assist.HttpUtils;
 import colesico.framework.telehttp.*;
 import colesico.framework.telehttp.result.HttpResult;
-import colesico.framework.telehttp.result.ValueResult;
 import jakarta.inject.Provider;
 
 import java.io.*;
 
 /**
- * General tele-http writer
+ * Basic {@link HttpResult}  writer
  */
-abstract public class AbstractHttpWriter<R, O extends HttpWriteOptions> implements HttpWriter<R, O> {
+abstract public class HttpResultWriter<R extends HttpResult, O extends HttpWriteOptions>
+        implements HttpWriter<R, O> {
 
     protected final Provider<HttpResponse> httpResponse;
 
-    public AbstractHttpWriter(Provider<HttpResponse> httpResponse) {
+    public HttpResultWriter(Provider<HttpResponse> httpResponse) {
         this.httpResponse = httpResponse;
     }
 
@@ -31,10 +31,8 @@ abstract public class AbstractHttpWriter<R, O extends HttpWriteOptions> implemen
      * Calculate resulting http status
      */
     protected Integer status(R result, O options, Integer defaultStatus) {
-        if (result instanceof HttpResult htr) {
-            if (htr.status() != null) {
-                return htr.status();
-            }
+        if (result.status() != null) {
+            return result.status();
         }
 
         if (options.status() != null) {
@@ -44,10 +42,7 @@ abstract public class AbstractHttpWriter<R, O extends HttpWriteOptions> implemen
         return defaultStatus;
     }
 
-    protected Integer empty(R result, Integer emptyStatus) {
-        if (result instanceof ValueResult<?> vr) {
-            return vr.value() == null ? emptyStatus : null;
-        }
+    protected Integer emptyResult(R result, Integer emptyStatus) {
         return result == null ? emptyStatus : null;
     }
 
@@ -55,11 +50,10 @@ abstract public class AbstractHttpWriter<R, O extends HttpWriteOptions> implemen
      * Calculate resulting content-type
      */
     protected ContentType contentType(R result, O options, ContentType defaultContentType) {
-        if (result instanceof HttpResult htr) {
-            if (htr.contentType() != null) {
-                return htr.contentType();
-            }
+        if (result.contentType() != null) {
+            return result.contentType();
         }
+
         if (options.contentType() != null) {
             return options.contentType();
         }
@@ -85,7 +79,7 @@ abstract public class AbstractHttpWriter<R, O extends HttpWriteOptions> implemen
             }
         }
 
-        var emptyStatus = empty(result, 204);
+        var emptyStatus = emptyResult(result, 204);
         if (emptyStatus != null) {
             httpResponse.setStatus(emptyStatus).close();
             return;

@@ -13,9 +13,9 @@ import jakarta.inject.Singleton;
 @Producer
 @Produce(NavigationResultWriter.class)
 @Produce(ExceptionResponseWriter.class)
-@Produce(ToStringObjectResultWriter.class)
+@Produce(ToStringValueResultWriter.class)
 @Produce(StringResultWriter.class)
-@Produce(BytesResponseWriter.class)
+@Produce(BytesResultWriter.class)
 @Produce(ToStringObjectWriter.class)
 @Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
@@ -23,7 +23,7 @@ public class WritersProducer {
 
     @Singleton
     @Classed(ObjectResult.class)
-    public HttpWriter objectResponseWriter(ToStringObjectResultWriter imp) {
+    public HttpWriter objectResponseWriter(ToStringValueResultWriter imp) {
         return imp;
     }
 
@@ -47,7 +47,7 @@ public class WritersProducer {
 
     @Singleton
     @Classed(BytesResult.class)
-    public HttpWriter bytesResponseWriter(BytesResponseWriter imp) {
+    public HttpWriter bytesResponseWriter(BytesResultWriter imp) {
         return imp;
     }
 

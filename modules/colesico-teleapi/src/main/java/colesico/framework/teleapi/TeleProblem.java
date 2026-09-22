@@ -7,7 +7,7 @@ package colesico.framework.teleapi;
  * <p>Implementations of this interface provide detailed, serializable context
  * about the error to help the client understand and handle the failure.</p>
  */
-public interface TeleError {
+public interface TeleProblem {
 
     /**
      * Retrieves additional, serializable details about the error.
@@ -19,5 +19,5 @@ public interface TeleError {
      * @return a serializable {@link Object} containing specific error data,
      *         or {@code null} if no additional data are available
      */
-    Object errorDetails();
+    Object problemDetail();
 }

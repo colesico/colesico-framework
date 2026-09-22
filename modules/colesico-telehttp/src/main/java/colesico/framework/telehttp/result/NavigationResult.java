@@ -18,6 +18,7 @@ package colesico.framework.telehttp.result;
 
 
 import colesico.framework.httprouter.assist.Navigation;
+import colesico.framework.teleapi.TeleResult;
 
 /**
  * {@link Navigation} wrapper
