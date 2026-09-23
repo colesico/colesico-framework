@@ -12,10 +12,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public class ValueResultWriter<R extends ValueHttpResult<?>, O extends HttpWriteOptions>
+public class ValueHttpResultWriter<R extends ValueHttpResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
-    public ValueResultWriter(Provider<HttpResponse> httpResponse) {
+    public ValueHttpResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 

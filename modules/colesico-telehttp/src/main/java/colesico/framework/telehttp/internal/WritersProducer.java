@@ -12,8 +12,8 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(NavigationResultWriter.class)
-@Produce(ValueResultWriter.class)
-@Produce(ProblemResultWriter.class)
+@Produce(ValueHttpResultWriter.class)
+@Produce(ProblemHttpResultWriter.class)
 @Produce(StringResultWriter.class)
 @Produce(BytesResultWriter.class)
 @Produce(ObjectWriter.class)
@@ -23,13 +23,13 @@ public class WritersProducer {
 
     @Singleton
     @Classed(ValueHttpResult.class)
-    public HttpWriter valueHttpResultWriter(ValueResultWriter imp) {
+    public HttpWriter valueHttpResultWriter(ValueHttpResultWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(ValueResult.class)
-    public HttpWriter valueResultWriter(ValueResultWriter imp) {
+    public HttpWriter valueResultWriter(ValueHttpResultWriter imp) {
         return imp;
     }
 
@@ -42,13 +42,13 @@ public class WritersProducer {
 
     @Singleton
     @Classed(ProblemHttpResult.class)
-    public HttpWriter problemHttpResultWriter(ProblemResultWriter imp) {
+    public HttpWriter problemHttpResultWriter(ProblemHttpResultWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(ProblemResult.class)
-    public HttpWriter problemResultWriter(ProblemResultWriter imp) {
+    public HttpWriter problemResultWriter(ProblemHttpResultWriter imp) {
         return imp;
     }
 
@@ -62,19 +62,19 @@ public class WritersProducer {
 
     @Singleton
     @Classed(NavigationResult.class)
-    public HttpWriter navigationResponseWriter(NavigationResultWriter impl) {
+    public HttpWriter navigationResultWriter(NavigationResultWriter impl) {
         return impl;
     }
 
     @Singleton
     @Classed(StringResult.class)
-    public HttpWriter stringResponseWriter(StringResultWriter imp) {
+    public HttpWriter stringResultWriter(StringResultWriter imp) {
         return imp;
     }
 
     @Singleton
     @Classed(BytesResult.class)
-    public HttpWriter bytesResponseWriter(BytesResultWriter imp) {
+    public HttpWriter bytesResultWriter(BytesResultWriter imp) {
         return imp;
     }
 

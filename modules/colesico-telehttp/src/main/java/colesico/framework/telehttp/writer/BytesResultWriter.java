@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class BytesResultWriter<V extends BytesResult, O extends HttpWriteOptions>
-        extends ValueResultWriter<V, O> {
+        extends ValueHttpResultWriter<V, O> {
 
     public BytesResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);

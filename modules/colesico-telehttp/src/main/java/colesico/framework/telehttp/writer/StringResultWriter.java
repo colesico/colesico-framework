@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class StringResultWriter<V extends StringResult, O extends HttpWriteOptions>
-        extends ValueResultWriter<V, O> {
+        extends ValueHttpResultWriter<V, O> {
 
     public StringResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
