@@ -20,30 +20,60 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.RestletWriter;
-import colesico.framework.restlet.writer.*;
+import colesico.framework.restlet.writer.JsonExceptionWriter;
+import colesico.framework.restlet.writer.JsonObjectWriter;
+import colesico.framework.restlet.writer.JsonProblemResultWriter;
+import colesico.framework.restlet.writer.JsonValueResultWriter;
+import colesico.framework.telehttp.result.ProblemHttpResult;
+import colesico.framework.telehttp.result.ProblemResult;
+import colesico.framework.telehttp.result.ValueHttpResult;
+import colesico.framework.telehttp.result.ValueResult;
+import colesico.framework.telehttp.writer.ExceptionWriter;
+
 import jakarta.inject.Singleton;
 
 @Producer
 @Produce(JsonValueResultWriter.class)
-@Produce(JsonExceptionWriter.class)
 @Produce(JsonObjectWriter.class)
+@Produce(JsonProblemResultWriter.class)
+@Produce(JsonExceptionWriter.class)
 public class RestletWritersProducer {
 
     @Singleton
-    @Classed(ObjectResult.class)
-    public RestletWriter objectResponseWriter(JsonValueResultWriter impl) {
-        return impl;
+    @Classed(ValueHttpResult.class)
+    public RestletWriter valueHttpRestletWriter(JsonValueResultWriter imp) {
+        return imp;
     }
 
     @Singleton
-    @Classed(ExceptionResponse.class)
-    public RestletWriter exceptionResponseWriter(JsonExceptionWriter impl) {
-        return impl;
+    @Classed(ValueResult.class)
+    public RestletWriter valueRestletWriter(JsonValueResultWriter imp) {
+        return imp;
     }
 
+    // Default writer for object
     @Singleton
     @Classed(Object.class)
-    public RestletWriter objectResponseWriter(JsonObjectWriter impl) {
+    public RestletWriter objectWriter(JsonObjectWriter imp) {
+        return imp;
+    }
+
+    @Singleton
+    @Classed(ProblemHttpResult.class)
+    public RestletWriter problemHttpRestletWriter(JsonProblemResultWriter imp) {
+        return imp;
+    }
+
+    @Singleton
+    @Classed(ProblemResult.class)
+    public RestletWriter problemRestletWriter(JsonProblemResultWriter imp) {
+        return imp;
+    }
+
+    // Default writer for exception
+    @Singleton
+    @Classed(Exception.class)
+    public RestletWriter exceptionWriter(JsonExceptionWriter impl) {
         return impl;
     }
 

@@ -4,6 +4,7 @@ import colesico.framework.teleapi.TeleProblem;
 import colesico.framework.telehttp.*;
 import colesico.framework.telehttp.result.ProblemHttpResult;
 import colesico.framework.telehttp.result.ProblemResult;
+import colesico.framework.telehttp.result.ValueResult;
 import jakarta.inject.Singleton;
 
 /**
@@ -19,10 +20,14 @@ public class ExceptionWriter
         this.writer = writer;
     }
 
-    protected Object details(Exception exception) {
+    /**
+     * Override this method to provide custom configured builder
+     */
+    protected ProblemResult.Builder builder(Exception exception) {
         if (exception instanceof TeleProblem<?> tp) {
-            return tp.problemDetails();
-        } else return exception.toString();
+            return ProblemResult.details(tp.problemDetails());
+        }
+        return ProblemResult.details(TeleProblem.ProblemDetails.of(exception));
     }
 
     @Override
@@ -30,7 +35,7 @@ public class ExceptionWriter
         if (exception instanceof ProblemHttpResult<?> phr) {
             writer.write(phr, options);
         } else {
-            writer.write(ProblemResult.details(details(exception)).build(), options);
+            writer.write(builder(exception).build(), options);
         }
     }
 }

@@ -18,12 +18,19 @@ public class JsonObjectWriter implements RestletWriter<Object> {
         this.writer = writer;
     }
 
+    /**
+     * Override this method to provide custom configured builder
+     */
+    protected ValueResult.Builder builder(Object value) {
+        return ValueResult.value(value);
+    }
+
     @Override
     public void write(Object value, RestletWriteOptions options) {
         if (value instanceof ValueHttpResult<?> vhr) {
             writer.write(vhr, options);
         } else {
-            writer.write(ValueResult.value(value).build(), options);
+            writer.write(builder(value).build(), options);
         }
     }
 }

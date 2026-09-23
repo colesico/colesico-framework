@@ -20,4 +20,25 @@ public interface TeleProblem<D> {
      * or {@code null} if no additional data are available
      */
     D problemDetails();
+
+    /**
+     * Default problem details
+     */
+    record ProblemDetails(String type, String message) {
+        public static ProblemDetails of(String type, String message) {
+            return new ProblemDetails(type, message);
+        }
+
+        public static ProblemDetails of(Class clazz, String message) {
+            return new ProblemDetails(clazz.getName(), message);
+        }
+
+        public static ProblemDetails of(Class clazz) {
+            return new ProblemDetails(clazz.getName(), null);
+        }
+
+        public static ProblemDetails of(Exception exception) {
+            return new ProblemDetails(exception.getClass().getName(), exception.getMessage());
+        }
+    }
 }

@@ -1,51 +1,38 @@
 package colesico.framework.restlet.writer;
 
-import colesico.framework.http.HttpResponse;
-import colesico.framework.restlet.JsonSerializer;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
-import colesico.framework.security.authentication.UnauthenticatedException;
-import colesico.framework.security.authorization.UnauthorizedException;
-import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.writer.ExceptionWriter;
-import jakarta.inject.Provider;
+import colesico.framework.teleapi.TeleProblem;
+import colesico.framework.telehttp.result.ProblemHttpResult;
+import colesico.framework.telehttp.result.ProblemResult;
 import jakarta.inject.Singleton;
 
 @Singleton
-public class JsonExceptionWriter
-        extends ExceptionWriter<RestletWriteOptions>
-        implements RestletWriter<Exception> {
+public class JsonExceptionWriter implements RestletWriter<Exception> {
 
-    private final JsonSerializer serializer;
+    protected final JsonProblemResultWriter writer;
 
-    public JsonExceptionWriter(Provider<HttpResponse> httpResponse, JsonSerializer serializer) {
-        super(httpResponse);
-        this.serializer = serializer;
+    public JsonExceptionWriter(JsonProblemResultWriter writer) {
+        this.writer = writer;
+    }
+
+    /**
+     * Override this method to provide custom configured builder
+     */
+    protected ProblemResult.Builder builder(Exception exception) {
+        if (exception instanceof TeleProblem<?> tp) {
+            return ProblemResult.details(tp.problemDetails());
+        }
+        return ProblemResult.details(TeleProblem.ProblemDetails.of(exception));
     }
 
     @Override
-    protected Integer status(ExceptionResponse response, RestletWriteOptions options, Integer defaultStatus) {
-        return super.status(response, options, defaultStatus);
+    public void write(Exception exception, RestletWriteOptions options) {
+        if (exception instanceof ProblemHttpResult<?> phr) {
+            writer.write(phr, options);
+        } else {
+            writer.write(builder(exception).build(), options);
+        }
     }
 
-    @Override
-    protected ContentType contentType(ExceptionResponse response, RestletWriteOptions options, ContentType defaultValue) {
-        return super.contentType(response, options, defaultValue);
-    }
-
-    @Override
-    protected String errorData(ExceptionResponse response) {
-        var exception = response.value();
-        return switch (exception) {
-            case UnauthenticatedException e -> "Unauthenticated";
-            case UnauthorizedException e -> "Unauthorized";
-            case HttpTeleError e -> {
-                if (e.details() != null) {
-                    yield serializer.serialize(e.details(), e.details().getClass());
-                }
-                yield "Error";
-            }
-            default -> "Error";
-        };
-    }
 }
