@@ -26,7 +26,14 @@ public interface TeleProblem<D> {
      */
     class ProblemDetails {
 
+        /**
+         * Problem type
+         */
         protected final String type;
+
+        /**
+         * Human-readable message
+         */
         protected final String message;
 
         public String getType() {
