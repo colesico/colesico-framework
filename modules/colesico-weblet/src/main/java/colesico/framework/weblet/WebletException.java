@@ -26,6 +26,18 @@ public class WebletException extends HttpTeleException {
     public WebletException() {
     }
 
+    public WebletException(ProblemDetails problemDetails, Integer status) {
+        super(problemDetails, status);
+    }
+
+    public WebletException(String message, Integer status) {
+        super(message, status);
+    }
+
+    public WebletException(Throwable cause, Integer status) {
+        super(cause, status);
+    }
+
     public WebletException(String message) {
         super(message);
     }
@@ -36,9 +48,5 @@ public class WebletException extends HttpTeleException {
 
     public WebletException(Throwable cause) {
         super(cause);
-    }
-
-    public WebletException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

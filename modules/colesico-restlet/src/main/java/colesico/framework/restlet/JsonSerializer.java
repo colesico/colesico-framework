@@ -58,7 +58,7 @@ public interface JsonSerializer {
         } catch (RestletException e) {
             throw e;
         } catch (Exception e) {
-            throw RestletException.of(500, e);
+            throw new RestletException(e);
         }
     }
 
@@ -79,7 +79,7 @@ public interface JsonSerializer {
         } catch (RestletException e) {
             throw e;
         } catch (Exception e) {
-            throw RestletException.of(500, e);
+            throw new RestletException(e, 500);
         }
     }
 }

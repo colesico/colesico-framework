@@ -64,7 +64,7 @@ public class GsonSerializer implements JsonSerializer {
             gson.toJson(value, baseType, jsonWriter);
 
         } catch (Exception e) {
-            throw RestletException.of(500, e);
+            throw new RestletException(e, 500);
         }
     }
 
@@ -81,7 +81,7 @@ public class GsonSerializer implements JsonSerializer {
             return gson.fromJson(jsonReader, targetType);
 
         } catch (Exception e) {
-            throw RestletException.of(500, e);
+            throw new RestletException(e, 500);
         }
     }
 

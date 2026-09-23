@@ -55,7 +55,7 @@ public final class JsonObjectReader
             String strValue = readString(originName, options.paramName());
             return StringUtils.isBlank(strValue) ? null : serializer.deserialize(strValue, options.baseType());
         } catch (Exception e) {
-            throw RestletException.of(e, 400);
+            throw new RestletException(e, 400);
         }
     }
 
