@@ -5,7 +5,6 @@ import colesico.framework.restlet.JsonSerializer;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.ContentType;
-import colesico.framework.telehttp.result.ObjectResult;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;

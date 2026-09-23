@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BytesResult extends AbstractValueResult<byte[]> {
+public class BytesResult extends ObjectResult<byte[]> {
 
     protected BytesResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
         super(status, contentType, headers, cookies, value);
@@ -17,7 +17,7 @@ public class BytesResult extends AbstractValueResult<byte[]> {
         return new BytesResult.Builder(value);
     }
 
-    public static class Builder extends AbstractValueResult.Builder<byte[], BytesResult, BytesResult.Builder> {
+    public static class Builder extends ObjectResult.Builder<byte[], BytesResult, BytesResult.Builder> {
 
         public Builder(byte[] value) {
             super(value);

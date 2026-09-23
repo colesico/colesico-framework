@@ -30,11 +30,11 @@ public record NavigationResult(Navigation navigation) implements TeleResult {
         return new NavigationResult(Navigation.of());
     }
 
-    public static NavigationResult of(String uri) {
+    public static NavigationResult uri(String uri) {
         return new NavigationResult(Navigation.of(uri));
     }
 
-    public static NavigationResult of(Class<?> serviceClass, String serviceMethod) {
+    public static NavigationResult service(Class<?> serviceClass, String serviceMethod) {
         return new NavigationResult(Navigation.of(serviceClass, serviceMethod));
     }
 }

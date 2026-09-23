@@ -14,7 +14,7 @@ import jakarta.inject.Singleton;
 public class ObjectWriter
         implements HttpWriter<Object, HttpWriteOptions> {
 
-    private final ValueResultWriter<ValueResult<?>,HttpWriteOptions> writer;
+    private final ValueResultWriter<ValueResult<?>, HttpWriteOptions> writer;
 
     public ObjectWriter(ValueResultWriter writer) {
         this.writer = writer;

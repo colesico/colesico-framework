@@ -7,31 +7,60 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ObjectResult extends AbstractValueResult<Object> {
+/**
+ * General response object result
+ */
+public class ObjectResult<V>
+        extends AbstractHttpResult
+        implements ValueResult<V> {
 
-    protected ObjectResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, Object value) {
-        super(status, contentType, headers, cookies, value);
+    protected final V value;
+
+    public ObjectResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
+        super(status, contentType, headers, cookies);
+        this.value = value;
     }
 
-    public static Builder value(Object value) {
-        return new Builder(value);
+    public V value() {
+        return value;
     }
 
-    public static class Builder extends AbstractValueResult.Builder<Object, ObjectResult, ObjectResult.Builder> {
+    public static <V, R extends ObjectResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> value(V value) {
+        return new Builder<>(value);
+    }
 
-        public Builder(Object value) {
-            super(value);
+    @Override
+    public String toString() {
+        return "ValueResult{" +
+                "status=" + status +
+                ", value=" + value +
+                '}';
+    }
+
+    public static class Builder<V, R extends ObjectResult<V>, B extends Builder<V, R, B>>
+            extends AbstractHttpResult.Builder<R, B> {
+
+        protected V value;
+
+        public B value(V value) {
+            this.value = value;
+            return self();
+        }
+
+        public Builder(V value) {
+            this.value = value;
         }
 
         @Override
-        protected Builder self() {
-            return this;
+        @SuppressWarnings("unchecked")
+        public R build() {
+            return (R) new ObjectResult<>(status, contentType, headers, cookies, value);
         }
 
         @Override
-        public ObjectResult build() {
-            return new ObjectResult(status, contentType, headers, cookies, value);
+        @SuppressWarnings("unchecked")
+        protected B self() {
+            return (B) this;
         }
     }
-
 }

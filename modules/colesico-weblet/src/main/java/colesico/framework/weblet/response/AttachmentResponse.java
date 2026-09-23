@@ -19,7 +19,7 @@ package colesico.framework.weblet.response;
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.result.BytesResult;
-import colesico.framework.telehttp.result.AbstractValueResult;
+import colesico.framework.telehttp.result.ObjectResult;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -42,7 +42,7 @@ public final class AttachmentResponse extends BytesResult {
         return new AttachmentResponse.Builder(value, fileName);
     }
 
-    public static class Builder extends AbstractValueResult.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
+    public static class Builder extends ObjectResult.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
 
         private final String fileName;
 

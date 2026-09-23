@@ -21,7 +21,6 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.writer.*;
-import colesico.framework.telehttp.result.ObjectResult;
 import jakarta.inject.Singleton;
 
 @Producer

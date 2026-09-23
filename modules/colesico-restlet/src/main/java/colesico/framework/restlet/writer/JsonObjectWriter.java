@@ -2,7 +2,6 @@ package colesico.framework.restlet.writer;
 
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
-import colesico.framework.telehttp.result.ObjectResult;
 import jakarta.inject.Singleton;
 
 /**
