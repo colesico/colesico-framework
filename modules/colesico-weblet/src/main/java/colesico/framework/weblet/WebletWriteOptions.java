@@ -40,15 +40,6 @@ public record WebletWriteOptions(
     public static final String BUILD_METHOD = "build";
     public static final String CUSTOM_WRITER_METHOD = "customWriter";
 
-    @Deprecated
-    public WebletWriteOptions(Type baseType, Integer statusCode, ContentType contentType, Class<? extends HttpWriter<?, ?>> customWriter, Object metadata) {
-        this.baseType = baseType;
-        this.status = statusCode;
-        this.contentType = contentType;
-        this.customWriter = customWriter;
-        this.metadata = metadata;
-    }
-
     public static Builder builder(Type baseType) {
         return new Builder(baseType);
     }
