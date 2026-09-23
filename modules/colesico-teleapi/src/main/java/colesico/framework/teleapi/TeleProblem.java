@@ -19,5 +19,5 @@ public interface TeleProblem<D> {
      * @return a serializable {@link Object} containing specific error data,
      * or {@code null} if no additional data are available
      */
-    D problemDetail();
+    D problemDetails();
 }

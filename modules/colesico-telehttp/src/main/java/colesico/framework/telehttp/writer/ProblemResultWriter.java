@@ -5,12 +5,14 @@ import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriteOptions;
 import colesico.framework.telehttp.result.ProblemHttpResult;
 import jakarta.inject.Provider;
+import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-abstract public class ProblemResultWriter<R extends ProblemHttpResult<?>, O extends HttpWriteOptions>
+@Singleton
+public class ProblemResultWriter<R extends ProblemHttpResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
     public ProblemResultWriter(Provider<HttpResponse> httpResponse) {
@@ -24,7 +26,7 @@ abstract public class ProblemResultWriter<R extends ProblemHttpResult<?>, O exte
 
     @Override
     protected Integer emptyStatus(R result, Integer emptyStatus) {
-        if (result == null || result.problemDetail() == null) {
+        if (result == null || result.problemDetails() == null) {
             return 500;
         }
         return null;
@@ -37,6 +39,6 @@ abstract public class ProblemResultWriter<R extends ProblemHttpResult<?>, O exte
     @Override
     protected void write(OutputStream outputStream, R result, O options) throws IOException {
         var contentType = contentType(result, options, ContentType.TEXT_PLAIN);
-        outputStream.write(result.problemDetail().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
+        outputStream.write(result.problemDetails().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
     }
 }

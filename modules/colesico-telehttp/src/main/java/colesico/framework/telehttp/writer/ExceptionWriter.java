@@ -1,64 +1,37 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.assist.StringUtils;
-import colesico.framework.http.HttpResponse;
 import colesico.framework.teleapi.TeleProblem;
 import colesico.framework.telehttp.*;
-import colesico.framework.telehttp.result.ValueHttpResult;
-import jakarta.inject.Provider;
+import colesico.framework.telehttp.result.ProblemHttpResult;
+import colesico.framework.telehttp.result.ProblemResult;
 import jakarta.inject.Singleton;
-
-import java.io.IOException;
-import java.io.OutputStream;
 
 /**
  * Default exception writer
  */
 @Singleton
-public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
-        extends HttpResultWriter<E, O> {
+public class ExceptionWriter
+        implements HttpWriter<Exception, HttpWriteOptions> {
 
-    public ExceptionWriter(Provider<HttpResponse> httpResponse) {
-        super(httpResponse);
+    private final ProblemResultWriter<ProblemHttpResult<?>, HttpWriteOptions> writer;
+
+    public ExceptionWriter(ProblemResultWriter writer) {
+        this.writer = writer;
     }
 
-      @Override
-    protected Integer status(E exception, O options, Integer defaultStatus) {
-        return super.status(exception, options, 500);
-    }
-
-    protected Integer emptyStatus(E exception, Integer emptyStatus) {
-        if (result instanceof ValueHttpResult<?> vr) {
-            return vr.value() == null ? emptyStatus : null;
-        }
-        return result == null ? emptyStatus : null;
-    }
-
-    protected String errorData(E exception, O options) {
-
-        String data = "Exception: " + exception.getClass().getCanonicalName();
-        if (!StringUtils.isBlank(exception.getMessage())) {
-            data = data + "; message: " + exception.getMessage();
-        }
-
-        if (exception instanceof TeleProblem hte) {
-            if (hte.problemDetail() != null) {
-                data = data + "; details: " + hte.problemDetail().toString();
-            }
-        }
-
-        return data;
+    protected Object details(Exception exception) {
+        if (exception instanceof TeleProblem<?> tp) {
+            return tp.problemDetails();
+        } else return exception.toString();
     }
 
     @Override
-    protected ContentType contentType(E exception, O options, ContentType defaultContentType) {
-        return ContentType.TEXT_PLAIN;
+    public void write(Exception exception, HttpWriteOptions options) {
+        if (exception instanceof ProblemHttpResult<?> phr) {
+            writer.write(phr, options);
+        } else {
+            writer.write(ProblemResult.details(details(exception)).build(), options);
+        }
     }
-
-    @Override
-    protected void write(OutputStream outputStream, E exception, O options) throws IOException {
-
-    }
-
-
 }
+
