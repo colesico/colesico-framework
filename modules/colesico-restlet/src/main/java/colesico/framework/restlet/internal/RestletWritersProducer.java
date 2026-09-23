@@ -24,14 +24,14 @@ import colesico.framework.restlet.writer.*;
 import jakarta.inject.Singleton;
 
 @Producer
-@Produce(JsonValueHttpResultWriter.class)
+@Produce(JsonValueResultWriter.class)
 @Produce(JsonExceptionWriter.class)
 @Produce(JsonObjectWriter.class)
 public class RestletWritersProducer {
 
     @Singleton
     @Classed(ObjectResult.class)
-    public RestletWriter objectResponseWriter(JsonValueHttpResultWriter impl) {
+    public RestletWriter objectResponseWriter(JsonValueResultWriter impl) {
         return impl;
     }
 
