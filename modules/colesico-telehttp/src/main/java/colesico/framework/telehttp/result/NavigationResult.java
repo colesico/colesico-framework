@@ -26,15 +26,23 @@ import colesico.framework.teleapi.TeleResult;
  */
 public record NavigationResult(Navigation navigation) implements TeleResult {
 
-    public static NavigationResult of() {
-        return new NavigationResult(Navigation.of());
+    public static NavigationResult of(Navigation navigation) {
+        return new NavigationResult(navigation);
     }
 
-    public static NavigationResult uri(String uri) {
-        return new NavigationResult(Navigation.of(uri));
+    public static NavigationResult redirect(String uri) {
+        return new NavigationResult(Navigation.of(uri).action(Navigation.Action.REDIRECT));
     }
 
-    public static NavigationResult service(Class<?> serviceClass, String serviceMethod) {
-        return new NavigationResult(Navigation.of(serviceClass, serviceMethod));
+    public static NavigationResult forward(String uri) {
+        return new NavigationResult(Navigation.of(uri).action(Navigation.Action.FORWARD));
+    }
+
+    public static NavigationResult redirect(Class<?> serviceClass, String serviceMethod) {
+        return new NavigationResult(Navigation.of(serviceClass, serviceMethod).action(Navigation.Action.REDIRECT));
+    }
+
+    public static NavigationResult forward(Class<?> serviceClass, String serviceMethod) {
+        return new NavigationResult(Navigation.of(serviceClass, serviceMethod).action(Navigation.Action.FORWARD));
     }
 }
