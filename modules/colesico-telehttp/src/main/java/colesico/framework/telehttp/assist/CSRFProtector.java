@@ -81,7 +81,7 @@ public class CSRFProtector {
                 }
             } else {
                 // If both headers are missing on an unsafe method, it indicates a direct security violation or a legacy bot.
-                throw new  HttpTeleException("CSRF Blocked: Both Origin and Referer headers are missing for an unsafe state-changing request.", 403);
+                throw new HttpTeleException("CSRF Blocked: Both Origin and Referer headers are missing for an unsafe state-changing request.", 403);
             }
         }
     }
@@ -108,7 +108,7 @@ public class CSRFProtector {
         try {
             uri = new URI(url);
         } catch (URISyntaxException e) {
-            throw HttpTeleError.of("Invalid url structure: " + url, 500);
+            throw new HttpTeleException("Invalid url structure: " + url, 500);
         }
         return uri.getHost();
     }
