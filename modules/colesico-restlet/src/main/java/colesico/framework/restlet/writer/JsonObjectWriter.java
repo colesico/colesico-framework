@@ -5,14 +5,14 @@ import colesico.framework.restlet.RestletWriteOptions;
 import jakarta.inject.Singleton;
 
 /**
- * Writes object value with  {@link JsonObjectResponseWriter}
+ * Writes object value with  {@link JsonValueHttpResultWriter}
  */
 @Singleton
 public class JsonObjectWriter implements RestletWriter<Object> {
 
-    protected final JsonObjectResponseWriter writer;
+    protected final JsonValueHttpResultWriter writer;
 
-    public JsonObjectWriter(JsonObjectResponseWriter writer) {
+    public JsonObjectWriter(JsonValueHttpResultWriter writer) {
         this.writer = writer;
     }
 

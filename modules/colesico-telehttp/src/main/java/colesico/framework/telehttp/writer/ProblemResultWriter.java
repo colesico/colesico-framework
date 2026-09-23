@@ -12,10 +12,10 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public class ProblemHttpResultWriter<R extends ProblemHttpResult<?>, O extends HttpWriteOptions>
+public class ProblemResultWriter<R extends ProblemHttpResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
-    public ProblemHttpResultWriter(Provider<HttpResponse> httpResponse) {
+    public ProblemResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 

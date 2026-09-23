@@ -13,9 +13,9 @@ import jakarta.inject.Singleton;
 public class ExceptionWriter
         implements HttpWriter<Exception, HttpWriteOptions> {
 
-    private final ProblemHttpResultWriter<ProblemHttpResult<?>, HttpWriteOptions> writer;
+    private final ProblemResultWriter<ProblemHttpResult<?>, HttpWriteOptions> writer;
 
-    public ExceptionWriter(ProblemHttpResultWriter writer) {
+    public ExceptionWriter(ProblemResultWriter writer) {
         this.writer = writer;
     }
 

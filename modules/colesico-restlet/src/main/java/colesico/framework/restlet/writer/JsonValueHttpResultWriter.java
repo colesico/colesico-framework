@@ -5,6 +5,8 @@ import colesico.framework.restlet.JsonSerializer;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.ContentType;
+import colesico.framework.telehttp.result.ValueHttpResult;
+import colesico.framework.telehttp.writer.ValueResultWriter;
 import jakarta.inject.Inject;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
@@ -18,14 +20,14 @@ import java.nio.charset.StandardCharsets;
  * Serialize object value with {@link JsonSerializer}
  */
 @Singleton
-public class JsonObjectResponseWriter
-        extends ValueResultWriter<ObjectResult, RestletWriteOptions>
-        implements RestletWriter<ObjectResult> {
+public class JsonValueHttpResultWriter
+        extends ValueResultWriter<ValueHttpResult<?>, RestletWriteOptions>
+        implements RestletWriter<ValueHttpResult<?>> {
 
     protected final JsonSerializer serializer;
 
     @Inject
-    public JsonObjectResponseWriter(Provider<HttpResponse> httpResponse, JsonSerializer serializer) {
+    public JsonValueHttpResultWriter(Provider<HttpResponse> httpResponse, JsonSerializer serializer) {
         super(httpResponse);
         this.serializer = serializer;
     }
