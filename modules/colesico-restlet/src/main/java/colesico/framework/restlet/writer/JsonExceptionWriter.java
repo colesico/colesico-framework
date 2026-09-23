@@ -23,7 +23,7 @@ public class JsonExceptionWriter implements RestletWriter<Exception> {
         if (exception instanceof TeleProblem<?> tp) {
             return ProblemResult.details(tp.problemDetails());
         }
-        return ProblemResult.details(TeleProblem.ProblemDetails.of(exception));
+        return ProblemResult.exception(exception);
     }
 
     @Override

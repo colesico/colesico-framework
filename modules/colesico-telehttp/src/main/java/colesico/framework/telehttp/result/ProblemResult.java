@@ -1,6 +1,7 @@
 package colesico.framework.telehttp.result;
 
 import colesico.framework.http.HttpCookie;
+import colesico.framework.teleapi.TeleProblem;
 import colesico.framework.telehttp.ContentType;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class ProblemResult<D>
 
     public static <D, R extends ProblemResult<D>, B extends Builder<D, R, B>> Builder<D, R, B> details(D details) {
         return new Builder<>(details);
+    }
+
+    public static <R extends ProblemResult<TeleProblem.ProblemDetails>, B extends Builder<TeleProblem.ProblemDetails, R, B>> Builder<TeleProblem.ProblemDetails, R, B> exception(Exception exception) {
+        return new Builder<>(TeleProblem.ProblemDetails.of(exception));
     }
 
     @Override
