@@ -24,16 +24,41 @@ public interface TeleProblem<D> {
     /**
      * Default problem details
      */
-    record ProblemDetails(String type, String message) {
+    class ProblemDetails {
+
+        protected final String type;
+        protected final String message;
+
+        public String getType() {
+            return type;
+        }
+
+        public String type() {
+            return type;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String message() {
+            return message;
+        }
+
+        public ProblemDetails(String type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+
         public static ProblemDetails of(String type, String message) {
             return new ProblemDetails(type, message);
         }
 
-        public static ProblemDetails of(Class clazz, String message) {
+        public static ProblemDetails of(Class<?> clazz, String message) {
             return new ProblemDetails(clazz.getName(), message);
         }
 
-        public static ProblemDetails of(Class clazz) {
+        public static ProblemDetails of(Class<?> clazz) {
             return new ProblemDetails(clazz.getName(), null);
         }
 

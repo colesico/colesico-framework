@@ -15,9 +15,15 @@ public interface HttpResult extends TeleResult {
 
     Integer status();
 
-    ContentType contentType();
+    default ContentType contentType() {
+        return ContentType.TEXT_PLAIN;
+    }
 
-    Map<String, List<String>> headers();
+    default Map<String, List<String>> headers() {
+        return Map.of();
+    }
 
-    Set<HttpCookie> cookies();
+    default Set<HttpCookie> cookies() {
+        return Set.of();
+    }
 }
