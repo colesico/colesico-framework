@@ -55,15 +55,15 @@ public interface TeleProblem<D> {
         }
 
         public static ProblemDetails of(Class<?> clazz, String message) {
-            return new ProblemDetails(clazz.getName(), message);
+            return new ProblemDetails(clazz.getCanonicalName(), message);
         }
 
         public static ProblemDetails of(Class<?> clazz) {
-            return new ProblemDetails(clazz.getName(), null);
+            return new ProblemDetails(clazz.getCanonicalName(), null);
         }
 
         public static ProblemDetails of(Exception exception) {
-            return new ProblemDetails(exception.getClass().getName(), exception.getMessage());
+            return new ProblemDetails(exception.getClass().getCanonicalName(), exception.getMessage());
         }
     }
 }
