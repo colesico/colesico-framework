@@ -42,7 +42,7 @@ abstract public class HttpResultWriter<R extends HttpResult, O extends HttpWrite
         return defaultStatus;
     }
 
-    protected Integer emptyResult(R result, Integer emptyStatus) {
+    protected Integer emptyStatus(R result, Integer emptyStatus) {
         return result == null ? emptyStatus : null;
     }
 
@@ -69,17 +69,15 @@ abstract public class HttpResultWriter<R extends HttpResult, O extends HttpWrite
             throw new HttpTeleException("HTTP Response is committed while writing response");
         }
 
-        if (result instanceof HttpResult htr) {
-            if (!htr.headers().isEmpty()) {
-                HttpUtils.setHeaders(httpResponse, htr.headers());
-            }
-
-            if (!htr.cookies().isEmpty()) {
-                HttpUtils.setCookies(httpResponse, htr.cookies());
-            }
+        if (!result.headers().isEmpty()) {
+            HttpUtils.setHeaders(httpResponse, result.headers());
         }
 
-        var emptyStatus = emptyResult(result, 204);
+        if (!result.cookies().isEmpty()) {
+            HttpUtils.setCookies(httpResponse, result.cookies());
+        }
+
+        var emptyStatus = emptyStatus(result, 204);
         if (emptyStatus != null) {
             httpResponse.setStatus(emptyStatus).close();
             return;
@@ -95,7 +93,8 @@ abstract public class HttpResultWriter<R extends HttpResult, O extends HttpWrite
             throw new HttpTeleException("Undefined content-type");
         }
 
-        httpResponse.setStatus(status).setContentType(contentType.headerValue());
+        httpResponse.setStatus(status)
+                .setContentType(contentType.headerValue());
 
         // Write response to intermediate buffer first; if successful, copy to output stream.
         // This keeps output stream open for error handling in caller.

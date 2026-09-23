@@ -3,26 +3,29 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.result.ValueResult;
+import colesico.framework.telehttp.result.ProblemResult;
 import jakarta.inject.Provider;
-import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-@Singleton
-public class ValueResultWriter<R extends ValueResult<?>, O extends HttpWriteOptions>
+abstract public class ProblemResultWriter<R extends ProblemResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
-    public ValueResultWriter(Provider<HttpResponse> httpResponse) {
+    public ProblemResultWriter(Provider<HttpResponse> httpResponse) {
         super(httpResponse);
     }
 
     @Override
+    protected Integer status(R result, O options, Integer defaultStatus) {
+        return super.status(result, options, 500);
+    }
+
+    @Override
     protected Integer emptyStatus(R result, Integer emptyStatus) {
-        if (result == null || result.value() == null) {
-            return emptyStatus;
+        if (result == null || result.problemDetail() == null) {
+            return 500;
         }
         return null;
     }
@@ -34,6 +37,6 @@ public class ValueResultWriter<R extends ValueResult<?>, O extends HttpWriteOpti
     @Override
     protected void write(OutputStream outputStream, R result, O options) throws IOException {
         var contentType = contentType(result, options, ContentType.TEXT_PLAIN);
-        outputStream.write(result.value().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
+        outputStream.write(result.problemDetail().toString().getBytes(contentType.charset().orElse(StandardCharsets.UTF_8)));
     }
 }

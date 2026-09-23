@@ -3,8 +3,8 @@ package colesico.framework.telehttp.result;
 import colesico.framework.teleapi.TeleProblem;
 
 /**
- * Tele-problem extension for http
+ * Tele-problem result for http
  */
-public interface HttpProblem extends TeleProblem, HttpResult {
+public interface ProblemResult<D> extends TeleProblem<D>, HttpResult {
 
 }

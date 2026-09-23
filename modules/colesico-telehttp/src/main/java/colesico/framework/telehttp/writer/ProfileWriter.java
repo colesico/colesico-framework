@@ -32,7 +32,8 @@ import java.util.*;
  * Profile default writer
  */
 @Singleton
-public class ProfileWriter<P extends Profile, R extends HttpWriteOptions> implements HttpWriter<P, R> {
+public class ProfileWriter<P extends Profile, R extends HttpWriteOptions>
+        implements HttpWriter<P, R> {
 
     public static final String PROFILE_COOKIE = "profile";
     public static final String PROFILE_HEADER = "x-profile";

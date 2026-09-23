@@ -27,7 +27,7 @@ public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
         return super.status(exception, options, 500);
     }
 
-    protected Integer emptyResult(E exception, Integer emptyStatus) {
+    protected Integer emptyStatus(E exception, Integer emptyStatus) {
         if (result instanceof ValueResult<?> vr) {
             return vr.value() == null ? emptyStatus : null;
         }

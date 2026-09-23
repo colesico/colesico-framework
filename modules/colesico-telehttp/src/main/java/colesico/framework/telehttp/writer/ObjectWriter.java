@@ -11,12 +11,12 @@ import jakarta.inject.Singleton;
  * Writes object value
  */
 @Singleton
-public class ToStringObjectWriter
+public class ObjectWriter
         implements HttpWriter<Object, HttpWriteOptions> {
 
-    private final ToStringValueResultWriter writer;
+    private final ValueResultWriter<ValueResult<?>,HttpWriteOptions> writer;
 
-    public ToStringObjectWriter(ToStringValueResultWriter writer) {
+    public ObjectWriter(ValueResultWriter writer) {
         this.writer = writer;
     }
 
