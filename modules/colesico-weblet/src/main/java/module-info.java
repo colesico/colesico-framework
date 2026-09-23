@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-import colesico.framework.service.codegen.modulator.Modulator;
-
 module colesico.framework.weblet {
 
     requires static java.compiler;
@@ -31,7 +29,7 @@ module colesico.framework.weblet {
     exports colesico.framework.weblet.reader;
 
     exports colesico.framework.weblet.codegen;
-    exports colesico.framework.weblet.response;
+    exports colesico.framework.weblet.result;
     exports colesico.framework.weblet.internal to colesico.framework.ioc;
 
     // provides Modulator with colesico.framework.weblet.codegen.WebletModulator;

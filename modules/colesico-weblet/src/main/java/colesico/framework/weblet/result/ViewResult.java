@@ -1,4 +1,4 @@
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.result;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
@@ -11,12 +11,12 @@ import java.util.Set;
 /**
  * Returns  model that be presented to given view
  */
-public final class ViewResponse extends AbstractHttpResult {
+public final class ViewResult extends AbstractHttpResult {
 
     private final String view;
     private final Object model;
 
-    public ViewResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String view, Object model) {
+    public ViewResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String view, Object model) {
         super(status, contentType, headers, cookies);
         this.view = view;
         this.model = model;
@@ -30,11 +30,11 @@ public final class ViewResponse extends AbstractHttpResult {
         return model;
     }
 
-    public static ViewResponse.Builder view(String view) {
-        return new ViewResponse.Builder(view);
+    public static ViewResult.Builder view(String view) {
+        return new ViewResult.Builder(view);
     }
 
-    public static class Builder extends AbstractHttpResult.Builder<ViewResponse, ViewResponse.Builder> {
+    public static class Builder extends AbstractHttpResult.Builder<ViewResult, ViewResult.Builder> {
 
         protected final String viewName;
         protected Object model;
@@ -54,8 +54,8 @@ public final class ViewResponse extends AbstractHttpResult {
         }
 
         @Override
-        public ViewResponse build() {
-            return new ViewResponse(status, contentType, headers, cookies, viewName, model);
+        public ViewResult build() {
+            return new ViewResult(status, contentType, headers, cookies, viewName, model);
         }
     }
 }

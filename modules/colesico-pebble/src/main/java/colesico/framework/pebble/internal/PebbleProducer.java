@@ -20,9 +20,9 @@ package colesico.framework.pebble.internal;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
-import colesico.framework.pebble.PebbleTemplater;
+import colesico.framework.pebble.PebbleViewResultWriter;
 import colesico.framework.weblet.WebletWriter;
-import colesico.framework.weblet.response.ViewResponse;
+import colesico.framework.weblet.result.ViewResult;
 
 import jakarta.inject.Singleton;
 
@@ -31,14 +31,14 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(PebbleTemplater.class)
+@Produce(PebbleViewResultWriter.class)
 @Produce(PebbleTemplateLoader.class)
 @Produce(FrameworkExtension.class)
 public class PebbleProducer {
 
     @Singleton
-    @Classed(ViewResponse.class)
-    public WebletWriter getDefaultViewWriter(PebbleTemplater impl) {
+    @Classed(ViewResult.class)
+    public WebletWriter viewResultWriter(PebbleViewResultWriter impl) {
         return impl;
     }
 

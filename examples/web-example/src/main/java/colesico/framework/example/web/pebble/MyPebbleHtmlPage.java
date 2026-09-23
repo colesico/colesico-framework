@@ -16,14 +16,14 @@
 
 package colesico.framework.example.web.pebble;
 
-import colesico.framework.weblet.response.ViewResponse;
+import colesico.framework.weblet.result.ViewResult;
 import colesico.framework.weblet.Weblet;
 
 @Weblet
 public class MyPebbleHtmlPage {
 
     //  http://localhost:8080/my-pebble-html-page/print?val=10
-    public ViewResponse print(Integer val) {
-        return ViewResponse.view("tmplRoot/MyPebbleTemplate").model(val).build();
+    public ViewResult print(Integer val) {
+        return ViewResult.view("tmplRoot/MyPebbleTemplate").model(val).build();
     }
 }

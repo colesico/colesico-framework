@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package colesico.framework.weblet.response;
+package colesico.framework.weblet.result;
 
 import colesico.framework.http.HttpCookie;
 import colesico.framework.telehttp.ContentType;
@@ -30,19 +30,19 @@ import java.util.Set;
 /**
  * Simple data file response
  */
-public final class AttachmentResponse extends BytesResult {
+public final class AttachmentResult extends BytesResult {
 
     public static final String CONTENT_DISPOSITION_HEADER = "content-disposition";
 
-    private AttachmentResponse(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
+    private AttachmentResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, byte[] value) {
         super(status, contentType, headers, cookies, value);
     }
 
-    public static AttachmentResponse.Builder attachment(byte[] value, String fileName) {
-        return new AttachmentResponse.Builder(value, fileName);
+    public static AttachmentResult.Builder attachment(byte[] value, String fileName) {
+        return new AttachmentResult.Builder(value, fileName);
     }
 
-    public static class Builder extends ValueResult.Builder<byte[], AttachmentResponse, AttachmentResponse.Builder> {
+    public static class Builder extends ValueResult.Builder<byte[], AttachmentResult, AttachmentResult.Builder> {
 
         private final String fileName;
 
@@ -57,12 +57,12 @@ public final class AttachmentResponse extends BytesResult {
         }
 
         @Override
-        public AttachmentResponse build() {
+        public AttachmentResult build() {
             if (fileName != null) {
                 String headerValue = "attachment; filename*=UTF-8''" + encodeFileName(fileName);
                 header(CONTENT_DISPOSITION_HEADER, headerValue);
             }
-            return new AttachmentResponse(status, contentType, headers, cookies, value);
+            return new AttachmentResult(status, contentType, headers, cookies, value);
         }
 
         private String encodeFileName(String fileName) {

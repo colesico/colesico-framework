@@ -20,7 +20,7 @@ import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.telehttp.writer.BytesResultWriter;
 import colesico.framework.weblet.WebletWriter;
-import colesico.framework.weblet.response.AttachmentResponse;
+import colesico.framework.weblet.result.AttachmentResult;
 import colesico.framework.weblet.writer.WebletProxyWriter;
 import jakarta.inject.Singleton;
 
@@ -28,8 +28,8 @@ import jakarta.inject.Singleton;
 public class WebletWritersProducer {
 
     @Singleton
-    @Classed(AttachmentResponse.class)
-    public WebletWriter binaryResponseWriter(BytesResultWriter impl) {
+    @Classed(AttachmentResult.class)
+    public WebletWriter attachmentResultWriter(BytesResultWriter impl) {
         return WebletProxyWriter.of(impl);
     }
 }
