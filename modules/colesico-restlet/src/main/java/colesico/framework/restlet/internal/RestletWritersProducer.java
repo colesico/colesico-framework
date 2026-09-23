@@ -16,6 +16,8 @@
 
 package colesico.framework.restlet.internal;
 
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
@@ -54,6 +56,7 @@ public class RestletWritersProducer {
     // Default writer for object
     @Singleton
     @Classed(Object.class)
+    @Substitute(Substitution.STUB)
     public RestletWriter objectWriter(JsonObjectWriter imp) {
         return imp;
     }
@@ -73,6 +76,7 @@ public class RestletWritersProducer {
     // Default writer for exception
     @Singleton
     @Classed(Exception.class)
+    @Substitute(Substitution.STUB)
     public RestletWriter exceptionWriter(JsonExceptionWriter impl) {
         return impl;
     }

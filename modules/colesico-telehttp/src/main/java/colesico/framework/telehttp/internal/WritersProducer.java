@@ -1,5 +1,6 @@
 package colesico.framework.telehttp.internal;
 
+import colesico.framework.ioc.conditional.Substitute;
 import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Classed;
 import colesico.framework.profile.Profile;
@@ -36,6 +37,7 @@ public class WritersProducer {
     // Default writer for object
     @Singleton
     @Classed(Object.class)
+    @Substitute(Substitution.STUB)
     public HttpWriter objectWriter(ObjectWriter imp) {
         return imp;
     }
@@ -55,6 +57,7 @@ public class WritersProducer {
     // Default writer for exception
     @Singleton
     @Classed(Exception.class)
+    @Substitute(Substitution.STUB)
     public HttpWriter exceptionWriter(ExceptionWriter impl) {
         return impl;
     }
