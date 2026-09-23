@@ -23,7 +23,7 @@ public class ObjectWriter
     /**
      * Override this method to provide custom configured builder
      */
-    protected ValueResult.Builder builder(Object value) {
+    protected ValueResult.Builder resultBuilder(Object value) {
         return ValueResult.value(value);
     }
 
@@ -32,7 +32,7 @@ public class ObjectWriter
         if (value instanceof ValueHttpResult<?> vhr) {
             writer.write(vhr, options);
         } else {
-            writer.write(builder(value).build(), options);
+            writer.write(resultBuilder(value).build(), options);
         }
     }
 }

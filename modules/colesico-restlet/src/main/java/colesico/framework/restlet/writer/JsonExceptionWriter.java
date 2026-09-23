@@ -19,7 +19,7 @@ public class JsonExceptionWriter implements RestletWriter<Exception> {
     /**
      * Override this method to provide custom configured builder
      */
-    protected ProblemResult.Builder builder(Exception exception) {
+    protected ProblemResult.Builder resultBuilder(Exception exception) {
         if (exception instanceof TeleProblem<?> tp) {
             return ProblemResult.details(tp.problemDetails());
         }
@@ -31,7 +31,7 @@ public class JsonExceptionWriter implements RestletWriter<Exception> {
         if (exception instanceof ProblemHttpResult<?> phr) {
             writer.write(phr, options);
         } else {
-            writer.write(builder(exception).build(), options);
+            writer.write(resultBuilder(exception).build(), options);
         }
     }
 
