@@ -5,6 +5,6 @@ import colesico.framework.teleapi.TeleProblem;
 /**
  * Tele-problem result for http
  */
-public interface ProblemResult<D> extends TeleProblem<D>, HttpResult {
+public interface ProblemHttpResult<D> extends TeleProblem<D>, HttpResult {
 
 }

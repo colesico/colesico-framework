@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class StringResult extends ObjectResult<String> {
+public class StringResult extends ValueResult<String> {
 
     protected StringResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, String value) {
         super(status, contentType, headers, cookies, value);
@@ -43,7 +43,7 @@ public class StringResult extends ObjectResult<String> {
         return new Builder(null);
     }
 
-    public static class Builder extends ObjectResult.Builder<String, StringResult, Builder> {
+    public static class Builder extends ValueResult.Builder<String, StringResult, Builder> {
 
         public Builder(String value) {
             super(value);

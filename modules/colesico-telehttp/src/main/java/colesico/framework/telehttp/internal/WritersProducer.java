@@ -22,7 +22,7 @@ import jakarta.inject.Singleton;
 public class WritersProducer {
 
     @Singleton
-    @Classed(ObjectResult.class)
+    @Classed(ValueResult.class)
     public HttpWriter objectResponseWriter(ToStringValueResultWriter imp) {
         return imp;
     }

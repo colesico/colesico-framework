@@ -8,15 +8,15 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * General response object result
+ * General purpose value result implementation
  */
-public class ObjectResult<V>
+public class ErrorResult<V>
         extends AbstractHttpResult
-        implements ValueResult<V> {
+        implements ValueHttpResult<V> {
 
     protected final V value;
 
-    public ObjectResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
+    public ErrorResult(Integer status, ContentType contentType, Map<String, List<String>> headers, Set<HttpCookie> cookies, V value) {
         super(status, contentType, headers, cookies);
         this.value = value;
     }
@@ -25,19 +25,19 @@ public class ObjectResult<V>
         return value;
     }
 
-    public static <V, R extends ObjectResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> value(V value) {
+    public static <V, R extends ErrorResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> value(V value) {
         return new Builder<>(value);
     }
 
     @Override
     public String toString() {
-        return "ValueResult{" +
+        return "ObjectResult{" +
                 "status=" + status +
                 ", value=" + value +
                 '}';
     }
 
-    public static class Builder<V, R extends ObjectResult<V>, B extends Builder<V, R, B>>
+    public static class Builder<V, R extends ErrorResult<V>, B extends Builder<V, R, B>>
             extends AbstractHttpResult.Builder<R, B> {
 
         protected V value;
@@ -54,7 +54,7 @@ public class ObjectResult<V>
         @Override
         @SuppressWarnings("unchecked")
         public R build() {
-            return (R) new ObjectResult<>(status, contentType, headers, cookies, value);
+            return (R) new ErrorResult<>(status, contentType, headers, cookies, value);
         }
 
         @Override

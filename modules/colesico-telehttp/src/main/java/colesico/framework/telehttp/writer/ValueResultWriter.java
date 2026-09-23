@@ -3,7 +3,7 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.result.ValueResult;
+import colesico.framework.telehttp.result.ValueHttpResult;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -12,7 +12,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 @Singleton
-public class ValueResultWriter<R extends ValueResult<?>, O extends HttpWriteOptions>
+public class ValueResultWriter<R extends ValueHttpResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
     public ValueResultWriter(Provider<HttpResponse> httpResponse) {

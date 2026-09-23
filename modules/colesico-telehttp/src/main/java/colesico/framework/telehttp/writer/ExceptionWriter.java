@@ -4,7 +4,7 @@ import colesico.framework.assist.StringUtils;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.teleapi.TeleProblem;
 import colesico.framework.telehttp.*;
-import colesico.framework.telehttp.result.ValueResult;
+import colesico.framework.telehttp.result.ValueHttpResult;
 import jakarta.inject.Provider;
 import jakarta.inject.Singleton;
 
@@ -28,7 +28,7 @@ public class ExceptionWriter<E extends Exception, O extends HttpWriteOptions>
     }
 
     protected Integer emptyStatus(E exception, Integer emptyStatus) {
-        if (result instanceof ValueResult<?> vr) {
+        if (result instanceof ValueHttpResult<?> vr) {
             return vr.value() == null ? emptyStatus : null;
         }
         return result == null ? emptyStatus : null;

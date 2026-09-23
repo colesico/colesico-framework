@@ -3,14 +3,14 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.http.HttpResponse;
 import colesico.framework.telehttp.ContentType;
 import colesico.framework.telehttp.HttpWriteOptions;
-import colesico.framework.telehttp.result.ProblemResult;
+import colesico.framework.telehttp.result.ProblemHttpResult;
 import jakarta.inject.Provider;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-abstract public class ProblemResultWriter<R extends ProblemResult<?>, O extends HttpWriteOptions>
+abstract public class ProblemResultWriter<R extends ProblemHttpResult<?>, O extends HttpWriteOptions>
         extends HttpResultWriter<R, O> {
 
     public ProblemResultWriter(Provider<HttpResponse> httpResponse) {

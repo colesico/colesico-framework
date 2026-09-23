@@ -3,8 +3,8 @@ package colesico.framework.telehttp.writer;
 import colesico.framework.telehttp.HttpWriteOptions;
 
 import colesico.framework.telehttp.HttpWriter;
-import colesico.framework.telehttp.result.ObjectResult;
 import colesico.framework.telehttp.result.ValueResult;
+import colesico.framework.telehttp.result.ValueHttpResult;
 import jakarta.inject.Singleton;
 
 /**
@@ -14,7 +14,7 @@ import jakarta.inject.Singleton;
 public class ObjectWriter
         implements HttpWriter<Object, HttpWriteOptions> {
 
-    private final ValueResultWriter<ValueResult<?>, HttpWriteOptions> writer;
+    private final ValueResultWriter<ValueHttpResult<?>, HttpWriteOptions> writer;
 
     public ObjectWriter(ValueResultWriter writer) {
         this.writer = writer;
@@ -22,10 +22,10 @@ public class ObjectWriter
 
     @Override
     public void write(Object value, HttpWriteOptions options) {
-        if (value instanceof ValueResult<?> vr) {
+        if (value instanceof ValueHttpResult<?> vr) {
             writer.write(vr, options);
         } else {
-            writer.write(ObjectResult.value(value).build(), options);
+            writer.write(ValueResult.value(value).build(), options);
         }
     }
 }
