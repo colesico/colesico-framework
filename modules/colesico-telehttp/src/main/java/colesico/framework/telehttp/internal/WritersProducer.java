@@ -12,26 +12,53 @@ import jakarta.inject.Singleton;
 
 @Producer
 @Produce(NavigationResultWriter.class)
-@Produce(ExceptionResponseWriter.class)
 @Produce(ValueResultWriter.class)
+@Produce(ProblemResultWriter.class)
 @Produce(StringResultWriter.class)
 @Produce(BytesResultWriter.class)
-@Produce(ValueWriter.class)
+@Produce(ObjectWriter.class)
 @Produce(ExceptionWriter.class)
 @Produce(value = ProfileWriter.class, keyType = HttpWriter.class, classed = Profile.class, substitute = Substitution.STUB)
 public class WritersProducer {
 
     @Singleton
-    @Classed(ValueResult.class)
-    public HttpWriter objectResponseWriter(ToStringValueResultWriter imp) {
+    @Classed(ValueHttpResult.class)
+    public HttpWriter valueHttpResultWriter(ValueResultWriter imp) {
         return imp;
     }
 
     @Singleton
-    @Classed(ExceptionResponse.class)
-    public HttpWriter exceptionResponseWriter(ExceptionResponseWriter imp) {
+    @Classed(ValueResult.class)
+    public HttpWriter valueResultWriter(ValueResultWriter imp) {
         return imp;
     }
+
+    // Default writer for object
+    @Singleton
+    @Classed(Object.class)
+    public HttpWriter objectWriter(ObjectWriter imp) {
+        return imp;
+    }
+
+    @Singleton
+    @Classed(ProblemHttpResult.class)
+    public HttpWriter problemHttpResultWriter(ProblemResultWriter imp) {
+        return imp;
+    }
+
+    @Singleton
+    @Classed(ProblemResult.class)
+    public HttpWriter problemResultWriter(ProblemResultWriter imp) {
+        return imp;
+    }
+
+    // Default writer for exception
+    @Singleton
+    @Classed(Exception.class)
+    public HttpWriter exceptionWriter(ExceptionWriter impl) {
+        return impl;
+    }
+
 
     @Singleton
     @Classed(NavigationResult.class)
@@ -51,19 +78,6 @@ public class WritersProducer {
         return imp;
     }
 
-    // Default writer for object
-    @Singleton
-    @Classed(Object.class)
-    public HttpWriter objectWriter(ValueWriter impl) {
-        return impl;
-    }
-
-    // Default writer for exception
-    @Singleton
-    @Classed(Exception.class)
-    public HttpWriter exceptionWriter(ExceptionWriter impl) {
-        return impl;
-    }
 
     // Default config
     @Singleton
