@@ -50,6 +50,14 @@ public sealed interface Identity permits IssuedIdentity {
         return id();
     }
 
+    default Long longId() {
+        if (id() == null || id().isEmpty()) {
+            return null;
+        }
+
+        return Long.valueOf(id().trim());
+    }
+
     /**
      * Returns a map of all claims associated with this identity.
      */
