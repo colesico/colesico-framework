@@ -24,7 +24,6 @@ module colesico.framework.weblet {
     requires org.slf4j;
 
     exports colesico.framework.weblet;
-    exports colesico.framework.weblet.assist;
     exports colesico.framework.weblet.writer;
     exports colesico.framework.weblet.reader;
 
