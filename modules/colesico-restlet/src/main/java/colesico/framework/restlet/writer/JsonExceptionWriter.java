@@ -28,10 +28,11 @@ public class JsonExceptionWriter implements RestletWriter<Exception> {
 
     @Override
     public void write(Exception exception, RestletWriteOptions options) {
-        if (exception instanceof ProblemHttpResult<?> phr) {
+        if (exception instanceof ProblemHttpResult phr) {
             writer.write(phr, options);
         } else {
-            writer.write(resultBuilder(exception).build(), options);
+            var problemResult = resultBuilder(exception).build();
+            writer.write(problemResult, options);
         }
     }
 

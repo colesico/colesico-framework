@@ -33,7 +33,7 @@ public class JsonProblemResultWriter
     protected void write(OutputStream outputStream, ProblemHttpResult<?> result, RestletWriteOptions options) throws IOException {
         var contentType = contentType(result, options, null);
         serializer.serialize(result.problemDetails(),
-                options.baseType(),
+                result.problemDetails().getClass(),
                 contentType.charset().orElse(StandardCharsets.UTF_8),
                 outputStream);
     }
