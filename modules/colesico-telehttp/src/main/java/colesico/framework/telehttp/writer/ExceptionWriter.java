@@ -1,6 +1,6 @@
 package colesico.framework.telehttp.writer;
 
-import colesico.framework.teleapi.TeleProblem;
+import colesico.framework.teleapi.assist.TeleProblem;
 import colesico.framework.telehttp.*;
 import colesico.framework.telehttp.result.ProblemHttpResult;
 import colesico.framework.telehttp.result.ProblemResult;

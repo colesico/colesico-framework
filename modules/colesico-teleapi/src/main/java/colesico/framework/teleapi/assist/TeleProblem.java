@@ -1,4 +1,4 @@
-package colesico.framework.teleapi;
+package colesico.framework.teleapi.assist;
 
 /**
  * Represents an error contract for exceptions that can be returned to a client

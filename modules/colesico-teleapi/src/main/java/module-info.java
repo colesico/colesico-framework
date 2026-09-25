@@ -1,6 +1,6 @@
 module colesico.framework.teleapi {
 
-   // Inherited in client projects
+    // Inherited in client projects
     requires transitive colesico.framework.ioc;
 
     requires org.slf4j;
@@ -11,4 +11,5 @@ module colesico.framework.teleapi {
     exports colesico.framework.teleapi.dataport;
     exports colesico.framework.teleapi.internal to colesico.framework.ioc;
 
+    opens colesico.framework.teleapi.assist;
 }

@@ -1,7 +1,7 @@
 package colesico.framework.telehttp.result;
 
 import colesico.framework.http.HttpCookie;
-import colesico.framework.teleapi.TeleProblem;
+import colesico.framework.teleapi.assist.TeleProblem;
 import colesico.framework.telehttp.ContentType;
 
 import java.util.List;

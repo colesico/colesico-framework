@@ -1,7 +1,7 @@
 package colesico.framework.telehttp;
 
 import colesico.framework.teleapi.TeleException;
-import colesico.framework.teleapi.TeleProblem;
+import colesico.framework.teleapi.assist.TeleProblem;
 import colesico.framework.telehttp.result.ProblemHttpResult;
 
 public class HttpTeleException

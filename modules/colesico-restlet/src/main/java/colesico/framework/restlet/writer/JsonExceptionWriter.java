@@ -2,7 +2,7 @@ package colesico.framework.restlet.writer;
 
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
-import colesico.framework.teleapi.TeleProblem;
+import colesico.framework.teleapi.assist.TeleProblem;
 import colesico.framework.telehttp.result.ProblemHttpResult;
 import colesico.framework.telehttp.result.ProblemResult;
 import jakarta.inject.Singleton;
