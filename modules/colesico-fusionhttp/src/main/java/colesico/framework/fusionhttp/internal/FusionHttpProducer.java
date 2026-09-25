@@ -3,6 +3,8 @@ package colesico.framework.fusionhttp.internal;
 import colesico.framework.fusionhttp.FusionHttpConfigPrototype;
 import colesico.framework.http.HttpCookieFactory;
 import colesico.framework.httpserver.HttpServer;
+import colesico.framework.ioc.conditional.Substitute;
+import colesico.framework.ioc.conditional.Substitution;
 import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import io.fusionauth.http.server.HTTPListenerConfiguration;
@@ -14,6 +16,10 @@ import io.fusionauth.http.server.HTTPServerConfiguration;
 @Produce(value = FusionHttpCookieFactory.class, keyType = HttpCookieFactory.class)
 public class FusionHttpProducer {
 
+    /**
+     * Default config
+     */
+    @Substitute(Substitution.STUB)
     public FusionHttpConfigPrototype configPrototype() {
         return new FusionHttpConfigPrototype() {
             @Override
