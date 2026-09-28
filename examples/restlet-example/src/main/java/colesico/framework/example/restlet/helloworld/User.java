@@ -16,9 +16,12 @@
 
 package colesico.framework.example.restlet.helloworld;
 
+import io.avaje.jsonb.Json;
+
 /**
  * DTO User
  */
+@Json
 public class User {
     private Long id;
     private String name;

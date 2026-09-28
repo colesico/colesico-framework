@@ -21,12 +21,10 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
-import colesico.framework.restlet.gson.GsonSerializer;
 
 import colesico.framework.httprouter.TargetController;
 import colesico.framework.restlet.jsonb.JsonbSerializer;
 import jakarta.inject.Singleton;
-
 
 /**
  * @author Vladlen Larionov

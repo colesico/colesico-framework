@@ -21,8 +21,8 @@ import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import io.avaje.jsonb.Jsonb;
+import io.avaje.jsonb.Types;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -43,7 +43,7 @@ public class RestletExampleTest {
     private Ioc ioc;
     private HttpServer httpServer;
     private HttpClient httpClient;
-    private Gson gson = new Gson();
+    private Jsonb jsonb = Jsonb.builder().build();
     private Logger logger = LoggerFactory.getLogger(RestletExampleTest.class);
 
     @BeforeClass
@@ -78,17 +78,18 @@ public class RestletExampleTest {
         return response.body();
     }
 
+
     @Test
     public void testList() throws Exception {
-        List<User> users = gson.fromJson(requestGET("http://localhost:8085/hello-world/list"), new TypeToken<List<User>>() {
-        }.getType());
+        var resultStr = requestGET("http://localhost:8085/hello-world/list");
+        List<User> users = (List<User>) jsonb.type(Types.listOf(User.class)).fromJson(resultStr);
         assertEquals("Ivan", users.get(0).getName());
         assertEquals("John", users.get(1).getName());
     }
 
     @Test
     public void testFind() throws Exception {
-        User user = gson.fromJson(requestGET("http://localhost:8085/hello-world/find?id=1"), (Type) User.class);
+        User user = jsonb.type(User.class).fromJson(requestGET("http://localhost:8085/hello-world/find?id=1"));
         assertEquals("Katherine", user.getName());
         assertEquals(user.getId().longValue(), 1L);
     }
@@ -98,7 +99,7 @@ public class RestletExampleTest {
         User user = new User();
         user.setId(2L);
         user.setName("AName");
-        Long id = gson.fromJson(requestPOST("http://localhost:8085/hello-world/save", gson.toJson(user)), Long.class);
+        Long id = jsonb.type(Long.class).fromJson(requestPOST("http://localhost:8085/hello-world/save", jsonb.toJson(user)));
         assertEquals(id.longValue(), 2L);
     }
 
@@ -113,7 +114,7 @@ public class RestletExampleTest {
     public void testBatchParamSimple() throws Exception {
         String resultStr = requestPOST("http://localhost:8085/batch-param-api/simple", "{id:1,name:Vladlen,val:test}");
         IO.println("Result=" + resultStr);
-        Map resultMap = gson.fromJson(resultStr, Map.class);
+        Map resultMap = (Map) jsonb.type(Types.mapOf(String.class)).fromJson(resultStr);
         assertEquals("Vladlen", resultMap.get("name"));
         assertEquals("test", resultMap.get("val"));
     }
@@ -122,7 +123,7 @@ public class RestletExampleTest {
     public void testBatchParamMix() throws Exception {
         String resultStr = requestPOST("http://localhost:8085/batch-param-api/mix?val=test", "{id:1,name:Vladlen}");
         IO.println("Result=" + resultStr);
-        Map resultMap = gson.fromJson(resultStr, Map.class);
+        Map resultMap = (Map) jsonb.type(Types.mapOf(String.class)).fromJson(resultStr);
         assertEquals("Vladlen", resultMap.get("name"));
         assertEquals("test", resultMap.get("val"));
     }
