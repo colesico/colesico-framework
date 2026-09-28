@@ -7,12 +7,11 @@ import io.jsonwebtoken.io.Serializer;
 import java.io.OutputStream;
 import java.util.Map;
 
-public final class JsonbJjwtSerializer implements Serializer<Map<String, ?>> {
+public final class JsonbJwtSerializer implements Serializer<Map<String, ?>> {
 
-    private final Jsonb jsonb;
+    private final Jsonb jsonb = Jsonb.builder().build();
 
-    public JsonbJjwtSerializer(Jsonb jsonb) {
-        this.jsonb = jsonb;
+    public JsonbJwtSerializer() {
     }
 
     @Override
