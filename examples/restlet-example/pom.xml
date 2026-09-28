@@ -46,6 +46,13 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-jsonb-generator</artifactId>
+            <version>${avaje-jsonb.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Logger -->
         <dependency>
             <groupId>org.tinylog</groupId>
