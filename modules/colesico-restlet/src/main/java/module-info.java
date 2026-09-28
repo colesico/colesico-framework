@@ -22,7 +22,7 @@ module colesico.framework.restlet {
     requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
-    requires transitive com.google.gson;
+    requires transitive io.avaje.jsonb;
 
     requires org.slf4j;
 
@@ -32,7 +32,7 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;
-    exports colesico.framework.restlet.gson;
+    exports colesico.framework.restlet.jsonb;
 
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;

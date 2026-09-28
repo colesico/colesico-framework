@@ -55,9 +55,9 @@
 
         <!-- Json parser -->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <groupId>io.avaje</groupId>
+            <artifactId>avaje-jsonb</artifactId>
+            <version>${avaje-jsonb.version}</version>
         </dependency>
 
         <!-- JJWT -->

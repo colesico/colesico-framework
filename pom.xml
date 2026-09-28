@@ -92,7 +92,7 @@
         <jdbi3.version>3.54.0</jdbi3.version>
 
         <!-- Serializers -->
-        <gson.version>2.14.0</gson.version>
+        <avaje-jsonb.version>3.16</avaje-jsonb.version>
         <kryo.version>5.6.2</kryo.version>
 
         <!-- HTTP Servers -->
