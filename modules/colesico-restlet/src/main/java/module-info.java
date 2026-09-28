@@ -22,7 +22,8 @@ module colesico.framework.restlet {
     requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
-    requires transitive com.google.gson;
+   // requires transitive com.squareup.moshi;
+    requires transitive com.squareup.moshi.adapters;
 
     requires org.slf4j;
 
@@ -32,7 +33,7 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;
-    exports colesico.framework.restlet.gson;
+    exports colesico.framework.restlet.moshi;
 
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;
@@ -45,6 +46,6 @@ module colesico.framework.restlet {
     opens colesico.framework.restlet.assist;
     opens colesico.framework.restlet;
 
-   // provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
+    // provides Modulator with colesico.framework.restlet.codegen.RestletModulator;
 
 }

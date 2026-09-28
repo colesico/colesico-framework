@@ -21,9 +21,8 @@ import colesico.framework.ioc.production.Produce;
 import colesico.framework.ioc.production.Producer;
 import colesico.framework.restlet.*;
 import colesico.framework.restlet.assist.LogRestletListener;
-import colesico.framework.restlet.gson.GsonSerializer;
-
 import colesico.framework.httprouter.TargetController;
+import colesico.framework.restlet.moshi.MoshiSerializer;
 import jakarta.inject.Singleton;
 
 
@@ -31,11 +30,11 @@ import jakarta.inject.Singleton;
  * @author Vladlen Larionov
  */
 @Producer
-@Produce(value = GsonSerializer.class, keyType = JsonSerializer.class)
 @Produce(value = RestletDataPortImpl.class, keyType = RestletDataPort.class)
 @Produce(value = RestletControllerImpl.class, keyType = RestletController.class)
 @Produce(value = LogRestletListener.class, keyType = RestletRequestListener.class, polyproduce = 0)
 @Produce(value = LogRestletListener.class, keyType = RestletResponseListener.class, polyproduce = 0)
+@Produce(value = MoshiSerializer.class, keyType = JsonSerializer.class)
 public class RestletProducer {
 
     @Singleton

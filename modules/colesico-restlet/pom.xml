@@ -49,9 +49,14 @@
 
         <!-- Json parser for rest -->
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi</artifactId>
+            <version>${moshi.vession}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.moshi</groupId>
+            <artifactId>moshi-adapters</artifactId>
+            <version>${moshi.vession}</version>
         </dependency>
 
     </dependencies>
