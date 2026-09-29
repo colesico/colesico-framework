@@ -47,15 +47,10 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!-- Json parser for rest -->
+        <!-- Json parser -->
         <dependency>
             <groupId>com.squareup.moshi</groupId>
             <artifactId>moshi</artifactId>
-            <version>${moshi.vession}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.moshi</groupId>
-            <artifactId>moshi-adapters</artifactId>
             <version>${moshi.vession}</version>
         </dependency>
 

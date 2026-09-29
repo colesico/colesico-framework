@@ -23,9 +23,9 @@ module colesico.framework.restlet {
 
     requires transitive colesico.framework.telehttp;
     requires transitive com.squareup.moshi;
-    requires transitive com.squareup.moshi.adapters;
 
     requires org.slf4j;
+    requires okio;
 
     // API
     exports colesico.framework.restlet;
