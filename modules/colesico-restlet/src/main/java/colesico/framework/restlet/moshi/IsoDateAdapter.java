@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateIsoAdapter extends JsonAdapter<Date> {
+public class IsoDateAdapter extends JsonAdapter<Date> {
     private static final String PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Override

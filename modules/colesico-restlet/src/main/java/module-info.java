@@ -22,7 +22,7 @@ module colesico.framework.restlet {
     requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
-   // requires transitive com.squareup.moshi;
+    requires transitive com.squareup.moshi;
     requires transitive com.squareup.moshi.adapters;
 
     requires org.slf4j;

@@ -9,5 +9,5 @@ import com.squareup.moshi.Moshi;
  */
 @ConfigPrototype(model = ConfigModel.POLYVARIANT)
 abstract public class MoshiOptionsPrototype {
-    abstract public void configure(Moshi.Builder builder);
+    abstract public Moshi.Builder configure(Moshi.Builder builder);
 }

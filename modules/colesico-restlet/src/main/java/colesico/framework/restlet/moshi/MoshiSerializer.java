@@ -19,14 +19,18 @@ public class MoshiSerializer implements JsonSerializer {
     protected Moshi moshi;
 
     public MoshiSerializer(Polysupplier<MoshiOptionsPrototype> options) {
-        final Moshi.Builder builder = new Moshi.Builder();
+
+        Moshi.Builder builder = new Moshi.Builder();
 
         builder.add(byte[].class, new Base64ByteArrayAdapter())
-                .add(LocalDate.class, new LocalDateAdapter())
-                .add(LocalDateTime.class, new LocalDateTimeAdapter())
-                .add(Date.class, new DateIsoAdapter());
+                .add(LocalDate.class, new IsoLocalDateAdapter())
+                .add(LocalDateTime.class, new IsoLocalDateTimeAdapter())
+                .add(Date.class, new IsoDateAdapter());
 
-        options.forEach(o -> o.configure(builder));
+        for (var option : options) {
+            builder = option.configure(builder);
+        }
+        
         this.moshi = builder.build();
     }
 
