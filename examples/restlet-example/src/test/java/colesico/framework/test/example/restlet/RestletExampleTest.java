@@ -70,6 +70,7 @@ public class RestletExampleTest {
     }
 
     private String requestPOST(String url, String jsonRequest) throws Exception {
+        IO.println("request="+url+"; json="+jsonRequest);
         var request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 //.header("X-Requested-With", "XMLHttpRequest")
@@ -127,7 +128,7 @@ public class RestletExampleTest {
 
     @Test
     public void testBatchParamSimple() throws Exception {
-        String resultStr = requestPOST("http://localhost:8085/batch-param-api/simple", "{id:1,name:Vladlen,val:test}");
+        String resultStr = requestPOST("http://localhost:8085/batch-param-api/simple", "{\"id\":1,\"name\":\"Vladlen\",\"val\":\"test\"}");
         IO.println("Result=" + resultStr);
         Map resultMap = deserialize(resultStr, Map.class);
         assertEquals("Vladlen", resultMap.get("name"));
@@ -136,7 +137,7 @@ public class RestletExampleTest {
 
     @Test
     public void testBatchParamMix() throws Exception {
-        String resultStr = requestPOST("http://localhost:8085/batch-param-api/mix?val=test", "{id:1,name:Vladlen}");
+        String resultStr = requestPOST("http://localhost:8085/batch-param-api/mix?val=test", "{\"id\":1,\"name\":\"Vladlen\"}");
         IO.println("Result=" + resultStr);
         Map resultMap = deserialize(resultStr, Map.class);
         assertEquals("Vladlen", resultMap.get("name"));
