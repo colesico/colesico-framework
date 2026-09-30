@@ -24,7 +24,7 @@ import colesico.framework.service.ParamsBean;
 import colesico.framework.service.BeanField;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.teleapi.TeleFacade;
-import colesico.framework.teleapi.TeleInterceptor;
+import colesico.framework.service.interception.TeleInterceptor;
 import colesico.framework.teleapi.dataport.ReadOptions;
 import colesico.framework.teleapi.dataport.WriteOptions;
 import com.palantir.javapoet.CodeBlock;

@@ -26,7 +26,7 @@ import colesico.framework.service.interception.InvocationContext;
 import colesico.framework.service.codegen.model.ServiceElement;
 import colesico.framework.service.codegen.model.teleapi.*;
 import colesico.framework.service.codegen.parser.ServiceProcessorContext;
-import colesico.framework.teleapi.TeleInterceptor;
+import colesico.framework.service.interception.TeleInterceptor;
 import colesico.framework.teleapi.dataport.DataPort;
 import com.palantir.javapoet.*;
 import jakarta.inject.Inject;
@@ -39,7 +39,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.NoType;
 import javax.lang.model.type.TypeMirror;
 
-import static colesico.framework.teleapi.TeleInterceptor.DATA_PORT_PROV_FIELD;
+import static colesico.framework.service.interception.TeleInterceptor.DATA_PORT_PROV_FIELD;
 
 /**
  * Generate tele-facade class
@@ -220,17 +220,15 @@ public class TeleInterceptorGenerator {
                 cb.add(";\n");
             }
 
-            // Try
-            cb.add("\ntry {\n").indent();
-
             // ==================  Invoke by context
             // final ResType result = ctx.proceed();
             cb.add("\n// Proceed next interceptors\n");
-            cb.add("final var $N = ($T) $N.$N();\n",
+            cb.add("final var $N = ($T) $N($N,$N);\n",
                     RESULT_VAR,
                     returnTypeName,
+                    TeleInterceptor.PROCEED_METHOD,
                     Interceptor.INVOCATION_CONTEXT_PARAM,
-                    InvocationContext.PROCEED_METHOD);
+                    DATA_PORT_VAR);
 
             // ================  Send result to client via data port
             // dataPort.write(result, new Context(result.class, ...));
@@ -252,20 +250,6 @@ public class TeleInterceptorGenerator {
             }
 
             cb.add("return $N;\n\n", RESULT_VAR);
-
-            // Catch
-            cb.unindent();
-            cb.add("} catch ($T $N) {\n", ClassName.get(Exception.class), EXCEPTION_VAR);
-            cb.indent();
-            cb.add("$N($N, $N);\n",
-                    TeleInterceptor.WRITE_EXCEPTION_METHOD,
-                    EXCEPTION_VAR,
-                    DATA_PORT_VAR
-            );
-            cb.add("// rethrow exception\n");
-            cb.add("throw $N;\n", EXCEPTION_VAR);
-            cb.unindent();
-            cb.add("}\n");
 
             methodBuilder.addCode(cb.build());
             classBuilder.addMethod(methodBuilder.build());
