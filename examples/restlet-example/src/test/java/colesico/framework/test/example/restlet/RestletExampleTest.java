@@ -21,9 +21,9 @@ import colesico.framework.httpserver.HttpServer;
 import colesico.framework.ioc.Ioc;
 import colesico.framework.ioc.IocBuilder;
 import colesico.framework.ioc.conditional.TestCondition;
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.AfterClass;
@@ -44,7 +44,7 @@ public class RestletExampleTest {
     private Ioc ioc;
     private HttpServer httpServer;
     private HttpClient httpClient;
-    private Moshi moshi = new Moshi.Builder().build();
+    private Gson gson = new GsonBuilder().create();
     private Logger logger = LoggerFactory.getLogger(RestletExampleTest.class);
 
     @BeforeClass
@@ -82,14 +82,13 @@ public class RestletExampleTest {
 
     public <T> T deserialize(String json, Class<T> clazz) throws Exception {
         IO.println("JSON -> " + json);
-        return moshi.adapter(clazz).fromJson(json);
+        return gson.fromJson(json, clazz);
     }
 
     public <T> List<T> deserializeList(String json, Class<T> elementClass) throws Exception {
         IO.println("JSON -> " + json);
-        Type type = Types.newParameterizedType(List.class, elementClass);
-        JsonAdapter<List<T>> adapter = moshi.adapter(type);
-        return adapter.fromJson(json);
+        Type type = TypeToken.getParameterized(List.class, elementClass).getType();
+        return gson.fromJson(json, type);
     }
 
     @Test
@@ -112,9 +111,9 @@ public class RestletExampleTest {
         user.setId(2L);
         user.setName("AName");
 
-        String requestBody = moshi.adapter(User.class).toJson(user);
+        String requestBody = gson.toJson(user, User.class);
         String jsonResponse = requestPOST("http://localhost:8085/hello-world/save", requestBody);
-        Long id = moshi.adapter(Long.class).fromJson(jsonResponse);
+        Long id = gson.fromJson(jsonResponse, Long.class);
 
         assertEquals(2L, id.longValue());
     }

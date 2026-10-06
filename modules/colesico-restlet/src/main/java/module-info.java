@@ -32,7 +32,7 @@ module colesico.framework.restlet {
     exports colesico.framework.restlet.reader;
     exports colesico.framework.restlet.writer;
     exports colesico.framework.restlet.assist;
-    exports colesico.framework.restlet.moshi;
+    exports colesico.framework.restlet.gson;
 
     // Internal
     exports colesico.framework.restlet.internal to colesico.framework.ioc;
