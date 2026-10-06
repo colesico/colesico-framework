@@ -8,13 +8,14 @@ import java.sql.SQLException;
 
 public class StringArrayMediator implements FieldMediator<String[]> {
 
-    private static final String SEPARATOR = "|";
+    private static final String SPLIT_SEPARATOR = "\\|";
+    private static final String JOIN_SEPARATOR = "|";
 
     @Override
     public String[] importField(String name, ResultSet rs) throws SQLException {
         String s = rs.getString(name);
-        if (s == null || s.strip().isEmpty()) return null;
-        return s.split(SEPARATOR, -1);
+        if (s == null || s.isBlank()) return null;
+        return s.split(SPLIT_SEPARATOR, -1);
     }
 
     @Override
@@ -23,6 +24,6 @@ public class StringArrayMediator implements FieldMediator<String[]> {
             fr.set(name, null);
             return;
         }
-        fr.set(name, String.join(SEPARATOR, arr));
+        fr.set(name, String.join(JOIN_SEPARATOR, arr));
     }
 }
