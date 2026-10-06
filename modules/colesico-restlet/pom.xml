@@ -52,12 +52,6 @@
             <groupId>com.squareup.moshi</groupId>
             <artifactId>moshi</artifactId>
             <version>${moshi.vession}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.squareup.moshi</groupId>
-                    <artifactId>moshi-kotlin</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
     </dependencies>
