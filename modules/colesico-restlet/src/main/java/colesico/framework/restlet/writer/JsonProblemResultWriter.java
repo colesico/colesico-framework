@@ -1,7 +1,7 @@
 package colesico.framework.restlet.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.restlet.JsonSerializer;
+import colesico.framework.restlet.JsonConverter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.telehttp.ContentType;
@@ -17,9 +17,9 @@ public class JsonProblemResultWriter
         extends ProblemResultWriter<ProblemHttpResult<?>, RestletWriteOptions>
         implements RestletWriter<ProblemHttpResult<?>> {
 
-    protected final JsonSerializer serializer;
+    protected final JsonConverter serializer;
 
-    public JsonProblemResultWriter(Provider<HttpResponse> httpResponse, JsonSerializer serializer) {
+    public JsonProblemResultWriter(Provider<HttpResponse> httpResponse, JsonConverter serializer) {
         super(httpResponse);
         this.serializer = serializer;
     }

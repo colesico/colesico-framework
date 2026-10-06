@@ -1,18 +1,23 @@
-package colesico.framework.restlet.moshi;
+package colesico.framework.restlet.gson;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonReader;
-import com.squareup.moshi.JsonWriter;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class IsoDateAdapter extends JsonAdapter<Date> {
+public class IsoDateAdapter extends TypeAdapter<Date> {
     private static final String PATTERN = "yyyy-MM-dd'T'HH:mm:ss";
 
     @Override
-    public Date fromJson(JsonReader reader) throws IOException {
+    public Date read(JsonReader reader) throws IOException {
+        if (reader.peek() == JsonToken.NULL) {
+            reader.nextNull();
+            return null;
+        }
         String dateString = reader.nextString();
         try {
             return new SimpleDateFormat(PATTERN).parse(dateString);
@@ -22,7 +27,7 @@ public class IsoDateAdapter extends JsonAdapter<Date> {
     }
 
     @Override
-    public void toJson(JsonWriter writer, Date value) throws IOException {
+    public void write(JsonWriter writer, Date value) throws IOException {
         if (value == null) {
             writer.nullValue();
             return;

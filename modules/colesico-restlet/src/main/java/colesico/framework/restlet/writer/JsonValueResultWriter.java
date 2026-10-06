@@ -1,7 +1,7 @@
 package colesico.framework.restlet.writer;
 
 import colesico.framework.http.HttpResponse;
-import colesico.framework.restlet.JsonSerializer;
+import colesico.framework.restlet.JsonConverter;
 import colesico.framework.restlet.RestletWriter;
 import colesico.framework.restlet.RestletWriteOptions;
 import colesico.framework.telehttp.ContentType;
@@ -17,17 +17,17 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Default restlet value result writer.
- * Serialize object value with {@link JsonSerializer}
+ * Serialize object value with {@link JsonConverter}
  */
 @Singleton
 public class JsonValueResultWriter
         extends ValueResultWriter<ValueHttpResult<?>, RestletWriteOptions>
         implements RestletWriter<ValueHttpResult<?>> {
 
-    protected final JsonSerializer serializer;
+    protected final JsonConverter serializer;
 
     @Inject
-    public JsonValueResultWriter(Provider<HttpResponse> httpResponse, JsonSerializer serializer) {
+    public JsonValueResultWriter(Provider<HttpResponse> httpResponse, JsonConverter serializer) {
         super(httpResponse);
         this.serializer = serializer;
     }

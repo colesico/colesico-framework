@@ -30,12 +30,12 @@ public final class JsonObjectReader
     private static final String CONTENT_TYPE_HEADER = "content-type";
     private static final Pattern CHARSET_PATTERN = Pattern.compile("charset=\\s*\"?([^;\"]+)\"?", Pattern.CASE_INSENSITIVE);
 
-    private final JsonSerializer serializer;
+    private final JsonConverter serializer;
 
     private final Provider<HttpContext> httpContext;
 
     @Inject
-    public JsonObjectReader(OriginFactory originFactory, JsonSerializer serializer, Provider<HttpContext> httpContext) {
+    public JsonObjectReader(OriginFactory originFactory, JsonConverter serializer, Provider<HttpContext> httpContext) {
         super(originFactory);
         this.serializer = serializer;
         this.httpContext = httpContext;

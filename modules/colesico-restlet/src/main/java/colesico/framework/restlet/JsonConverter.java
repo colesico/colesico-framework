@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
  * High-performance I/O operations rely on streams, while string-based utilities
  * encapsulate the underlying byte conversions using UTF-8 standard.
  */
-public interface JsonSerializer {
+public interface JsonConverter {
 
     /**
      * The standard character encoding for JSON data interchange as per RFC 8259.

@@ -34,7 +34,7 @@ import jakarta.inject.Singleton;
 @Produce(value = RestletControllerImpl.class, keyType = RestletController.class)
 @Produce(value = LogRestletListener.class, keyType = RestletRequestListener.class, polyproduce = 0)
 @Produce(value = LogRestletListener.class, keyType = RestletResponseListener.class, polyproduce = 0)
-@Produce(value = MoshiSerializer.class, keyType = JsonSerializer.class)
+@Produce(value = MoshiSerializer.class, keyType = JsonConverter.class)
 public class RestletProducer {
 
     @Singleton

@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-orgjson</artifactId>
+            <artifactId>jjwt-gson</artifactId>
             <version>${jjwt.version}</version>
             <scope>runtime</scope>
         </dependency>

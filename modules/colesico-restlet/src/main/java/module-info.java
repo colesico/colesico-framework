@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import colesico.framework.service.codegen.modulator.Modulator;
+
 
 module colesico.framework.restlet {
+
+    requires org.slf4j;
 
     requires static java.compiler;
     requires static com.palantir.javapoet;
 
     requires transitive colesico.framework.telehttp;
-    requires transitive com.squareup.moshi;
-
-    requires org.slf4j;
-    requires okio;
+    requires transitive com.google.gson;
 
     // API
     exports colesico.framework.restlet;
