@@ -14,7 +14,7 @@ public class StringArrayMediator implements FieldMediator<String[]> {
     @Override
     public String[] importField(String name, ResultSet rs) throws SQLException {
         String s = rs.getString(name);
-        if (s == null || s.isBlank()) return null;
+        if (s == null) return null;
         return s.split(SPLIT_SEPARATOR, -1);
     }
 
