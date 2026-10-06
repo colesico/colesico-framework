@@ -31,8 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.processing.ProcessingEnvironment;
+
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
@@ -223,7 +226,8 @@ public class ConfigParser extends FrameworkAbstractParser {
     }
 
     private ConfigSourceElement parseSourceValues(ClassElement configImplementation, ConfigSourceElement confSourceElm) {
-        for (FieldElement me : configImplementation.fields()) {
+        var fields = configImplementation.fieldsFiltered(f -> !f.unwrap().getModifiers().contains(Modifier.STATIC));
+        for (FieldElement me : fields) {
             AnnotationAssist<FromSource> fromSrcAnn = me.annotation(FromSource.class);
             AnnotationAssist<NotFromSource> notFromSrcAnn = me.annotation(NotFromSource.class);
             if (fromSrcAnn != null && notFromSrcAnn != null) {

@@ -66,6 +66,9 @@ abstract public class HikariProperties extends HikariConfigPrototype {
         return "META-INF";
     }
 
+    /**
+     * Override this method to transform properties from file
+     */
     protected HikariConfig createConfig(Properties props) {
         return new HikariConfig(props);
     }
