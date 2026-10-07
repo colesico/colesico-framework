@@ -6,7 +6,7 @@ import colesico.framework.jdbirec.RecordKitApi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class StringArrayMediator implements FieldMediator<String[]> {
+public class ArrayStringTextMediator implements FieldMediator<String[]> {
 
     private static final String SPLIT_SEPARATOR = "\\|";
     private static final String JOIN_SEPARATOR = "|";

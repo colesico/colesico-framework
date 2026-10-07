@@ -16,10 +16,10 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class DoubleListMediator extends ListMediator<Double> {
+public class ListFloatArrayMediator extends ListAsArrayMediator<Float> {
 
     @Override
-    protected Double[] newArray(int size) {
-        return new Double[size];
+    protected Float[] newArray(int size) {
+        return new Float[size];
     }
 }

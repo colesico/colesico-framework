@@ -16,7 +16,7 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class IntegerListMediator extends ListMediator<Integer> {
+public class IntegerListMediator extends ListAsArrayMediator<Integer> {
 
     @Override
     protected Integer[] newArray(int size) {

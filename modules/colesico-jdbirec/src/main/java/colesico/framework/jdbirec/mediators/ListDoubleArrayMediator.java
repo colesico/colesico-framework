@@ -16,9 +16,10 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class ShortListMediator extends ListMediator<Short> {
+public class ListDoubleArrayMediator extends ListAsArrayMediator<Double> {
+
     @Override
-    protected Short[] newArray(int size) {
-        return new Short[size];
+    protected Double[] newArray(int size) {
+        return new Double[size];
     }
 }

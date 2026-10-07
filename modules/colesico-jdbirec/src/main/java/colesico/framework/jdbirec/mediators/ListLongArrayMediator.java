@@ -16,9 +16,9 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class StringListMediator extends ListMediator<String> {
+public class ListLongArrayMediator extends ListAsArrayMediator<Double> {
     @Override
-    protected String[] newArray(int size) {
-        return new String[size];
+    protected Double[] newArray(int size) {
+        return new Double[size];
     }
 }

@@ -16,28 +16,33 @@
 
 package colesico.framework.jdbirec.mediators;
 
-import colesico.framework.assist.StringUtils;
 import colesico.framework.jdbirec.AbstRactrecordKit;
 import colesico.framework.jdbirec.FieldMediator;
 
+import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.List;
 
-public class LocaleMediator implements FieldMediator<Locale> {
+abstract public class ListAsArrayMediator<T> implements FieldMediator<List<T>> {
+
+    abstract protected T[] newArray(int size);
 
     @Override
-    public Locale importField(String columnName, ResultSet rs) throws SQLException {
-        String localeStr = rs.getString(columnName);
-        if (StringUtils.isBlank(localeStr)) {
+    public List<T> importField(String columnName, ResultSet rs) throws SQLException {
+        Array array = rs.getArray(columnName);
+        if (array == null) {
             return null;
         }
-        return Locale.forLanguageTag(localeStr);
+        T[] values = (T[]) array.getArray();
+        List<T> result = Arrays.asList(values);
+        return result;
     }
 
     @Override
-    public void exportField(Locale locale, String fieldName, AbstRactrecordKit.FieldReceiver fr) {
-        fr.set(fieldName, locale == null ? null : locale.toLanguageTag());
+    public void exportField(List<T> value, String fieldName, AbstRactrecordKit.FieldReceiver fr) {
+        fr.set(fieldName, value == null ? null : value.toArray(newArray(value.size())));
     }
 
 }

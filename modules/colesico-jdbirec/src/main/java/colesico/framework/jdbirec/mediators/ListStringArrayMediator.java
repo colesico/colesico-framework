@@ -16,9 +16,9 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class BooleanListMediator extends ListMediator<Boolean> {
+public class ListStringArrayMediator extends ListAsArrayMediator<String> {
     @Override
-    protected Boolean[] newArray(int size) {
-        return new Boolean[size];
+    protected String[] newArray(int size) {
+        return new String[size];
     }
 }

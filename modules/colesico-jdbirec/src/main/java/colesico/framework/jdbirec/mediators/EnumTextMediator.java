@@ -6,7 +6,7 @@ import colesico.framework.jdbirec.RecordKitApi;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-abstract public class EnumMediator<E extends Enum<E>> implements FieldMediator<E> {
+abstract public class EnumTextMediator<E extends Enum<E>> implements FieldMediator<E> {
 
     abstract protected E valueOf(String name);
 

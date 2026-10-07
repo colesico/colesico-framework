@@ -9,7 +9,7 @@ import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-public class DateMediator implements FieldMediator<Date> {
+public class DateTextMediator implements FieldMediator<Date> {
 
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_INSTANT;
 

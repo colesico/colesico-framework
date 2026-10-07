@@ -16,9 +16,9 @@
 
 package colesico.framework.jdbirec.mediators;
 
-public class LongListMediator extends ListMediator<Double> {
+public class ListBooleanArrayMediator extends ListAsArrayMediator<Boolean> {
     @Override
-    protected Double[] newArray(int size) {
-        return new Double[size];
+    protected Boolean[] newArray(int size) {
+        return new Boolean[size];
     }
 }
