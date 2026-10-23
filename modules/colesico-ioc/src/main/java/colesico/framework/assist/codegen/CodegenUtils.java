@@ -175,6 +175,14 @@ public class CodegenUtils {
         for (ParameterSpec ps : params) {
             mb.addParameter(ps);
         }
+
+        var thrownTypes = method.unwrap().getThrownTypes();
+        if (!thrownTypes.isEmpty()) {
+            for (var throwType : thrownTypes) {
+                mb.addException(TypeName.get(throwType));
+            }
+        }
+
         return mb;
     }
 
