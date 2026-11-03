@@ -14,8 +14,8 @@ import static colesico.framework.jdbirec.TagFilter.*;
         tableAlias = "usr",
         views = {
                 @RecordView,
-                @RecordView(name = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TG_FULL, TF_NO_TAGS})),
-                @RecordView(name = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TG_BRIEF, TF_NO_TAGS}))
+                @RecordView(name = VIEW_FULL, tagFilter = @TagFilter(anyOf = {TAG_FULL, TF_NO_TAGS})),
+                @RecordView(name = VIEW_BRIEF, tagFilter = @TagFilter(anyOf = {TAG_BRIEF, TF_NO_TAGS}))
         }
 )
 public class VUser {
@@ -23,17 +23,17 @@ public class VUser {
     @Column
     private Integer id;
 
-    @Column(tags = TG_BRIEF)
+    @Column(tags = TAG_BRIEF)
     private String name = null;
 
-    @Composition(renaming = "h_@column", tags = TG_FULL)
+    @Composition(renaming = "h_@column", tags = TAG_FULL)
     private VContacts home;
 
-    @Composition(renaming = "w_@column", tags = {TG_FULL, TG_BRIEF})
+    @Composition(renaming = "w_@column", tags = {TAG_FULL, TAG_BRIEF})
     private VContacts work;
 
     @Composition(renaming = RN_PREFIX,
-            tagFilter = @TagFilter(anyOf = {TG_FULL, "#extra.email"})
+            tagFilter = @TagFilter(anyOf = {TAG_FULL, "#extra.email"})
     )
     private VContacts extra;
 

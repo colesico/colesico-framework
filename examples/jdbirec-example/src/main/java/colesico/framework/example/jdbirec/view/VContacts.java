@@ -2,7 +2,7 @@ package colesico.framework.example.jdbirec.view;
 
 import colesico.framework.jdbirec.Column;
 
-import static colesico.framework.jdbirec.TagFilter.TG_FULL;
+import static colesico.framework.jdbirec.TagFilter.TAG_FULL;
 
 public class VContacts {
 
@@ -12,7 +12,7 @@ public class VContacts {
     @Column
     private String email;
 
-    @Column(tags = TG_FULL)
+    @Column(tags = TAG_FULL)
     private String address;
 
     public String getPhone() {

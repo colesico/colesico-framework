@@ -41,8 +41,8 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TagFilter {
 
-    String TG_FULL = "#full";
-    String TG_BRIEF = "#brief";
+    String TAG_FULL = "#full";
+    String TAG_BRIEF = "#brief";
 
     /**
      * Tag filter -  not empty tag set
