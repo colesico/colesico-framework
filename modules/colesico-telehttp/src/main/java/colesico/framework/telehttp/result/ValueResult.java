@@ -29,6 +29,10 @@ public class ValueResult<V>
         return new Builder<>(value);
     }
 
+    public static <V, R extends ValueResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> empty() {
+        return new Builder<>(null);
+    }
+
     @Override
     public String toString() {
         return "ValueResult{" +
