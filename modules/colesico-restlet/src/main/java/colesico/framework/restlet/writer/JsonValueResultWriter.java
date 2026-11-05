@@ -13,6 +13,8 @@ import jakarta.inject.Singleton;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -40,8 +42,21 @@ public class JsonValueResultWriter
     @Override
     protected void write(OutputStream outputStream, ValueHttpResult<?> result, RestletWriteOptions options) throws IOException {
         var contentType = contentType(result, options, null);
+
+        Type targetType = options.baseType();
+
+        if (targetType instanceof ParameterizedType parameterizedType) {
+            Type rawType = parameterizedType.getRawType();
+            if (rawType instanceof Class<?> rawClass && ValueHttpResult.class.isAssignableFrom(rawClass)) {
+                Type[] typeArguments = parameterizedType.getActualTypeArguments();
+                if (typeArguments.length > 0) {
+                    targetType = typeArguments[0];
+                }
+            }
+        }
+
         serializer.serialize(result.value(),
-                options.baseType(),
+                targetType,
                 contentType.charset().orElse(StandardCharsets.UTF_8),
                 outputStream);
     }
