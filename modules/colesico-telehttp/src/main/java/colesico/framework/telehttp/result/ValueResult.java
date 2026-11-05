@@ -29,7 +29,7 @@ public class ValueResult<V>
         return new Builder<>(value);
     }
 
-    public static <V, R extends ValueResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> empty(Class<V> valueType) {
+    public static <V, R extends ValueResult<V>, B extends Builder<V, R, B>> Builder<V, R, B> empty(Class<V> typeAnchor) {
         return new Builder<>(null);
     }
 
